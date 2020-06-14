@@ -5,6 +5,8 @@ use Yii;
 use yii\helpers\Html;
 use yii\web\Response;
 use app\models\Config;
+use app\helpers\ControllerHelper;
+use app\services\AdminService;
 
 class SettingController extends PublicController
 {
@@ -15,23 +17,13 @@ class SettingController extends PublicController
      */
     public function actionApp()
     {
-        $request  = Yii::$app->request;
-        $response = Yii::$app->response;
-        $config   = Config::findOne(['type' => 'app']);
-
-        if($request->isPost){
-
-            $response->format = Response::FORMAT_JSON;
-
-            $config->content  = $this->form2json($request->post('Config'));
-
-            if ($config->save()) {
-                return ['status' => 'success', 'message' => '保存成功'];
-            }
-
-            return ['status' => 'error', 'message' => $config->getErrorMessage(), 'label' => $config->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
+            AdminService::G()->setSettingApp($post);
+        });
+        if($ret){
+            return $ret;
         }
-
+    	$config = AdminService::G()->getSettingApp();
         return $this->display('app', ['config' => $config]);
     }
 
@@ -41,23 +33,13 @@ class SettingController extends PublicController
      */
     public function actionEmail()
     {
-        $request  = Yii::$app->request;
-        $response = Yii::$app->response;
-        $config   = Config::findOne(['type' => 'email']);
-
-        if($request->isPost){
-
-            $response->format = Response::FORMAT_JSON;
-
-            $config->content = $this->form2json($request->post('Config'));
-
-            if ($config->save()) {
-                return ['status' => 'success', 'message' => '保存成功'];
-            }
-
-            return ['status' => 'error', 'message' => $config->getErrorMessage(), 'label' => $config->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
+           $config = AdminService::G()->setSettingEmail($post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $config = AdminService::G()->setSettingEmail();
         return $this->display('email', ['config' => $config]);
     }
 
@@ -67,64 +49,13 @@ class SettingController extends PublicController
      */
     public function actionSafe()
     {
-        $request  = Yii::$app->request;
-        $response = Yii::$app->response;
-        $config   = Config::findOne(['type' => 'safe']);
-
-        if($request->isPost){
-
-            $response->format = Response::FORMAT_JSON;
-
-            $data = $request->post('Config');
-
-            // 判断输入IP是否同时存在于白名单和黑名单
-            $ip_white_list = explode("\r\n", trim($data['ip_white_list']));
-            $ip_black_list = explode("\r\n", trim($data['ip_black_list']));
-
-            $conflict_list = array_intersect($ip_white_list, $ip_black_list);
-
-            if(array_filter($conflict_list)){
-                return ['status' => 'error', 'message' => '黑名单和白名单里不能出现相同的IP'];
-            }
-
-            // 判断邮箱后缀是否同时存在于白名单和黑名单
-            $email_white_list = explode('\r\n', trim($data['email_white_list']));
-            $email_black_list = explode('\r\n', trim($data['email_black_list']));
-
-            $conflict_list = array_intersect($email_white_list, $email_black_list);
-
-            if(array_filter($conflict_list)){
-                return ['status' => 'error', 'message' => '黑名单和白名单里不能出现相同的邮箱后缀'];
-            }
-
-            $config->content = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-            if ($config->save()) {
-                return ['status' => 'success', 'message' => '保存成功'];
-            }
-
-            return ['status' => 'error', 'message' => $config->getErrorMessage(), 'label' => $config->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
+            AdminService::G()->setSettingSafe($post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $config = AdminService::G()->getSettingSafe();
         return $this->display('safe', ['config' => $config]);
     }
-
-    /**
-     * 表单过滤后转json
-     * @param $table
-     * @return false|string
-     */
-    private function form2json($form)
-    {
-        if(!is_array($form) || !$form){
-            return;
-        }
-        $array = [];
-        foreach ($form as $k => $v) {
-            $array[$k] = trim(Html::encode($v));
-        }
-
-        return json_encode($array, JSON_UNESCAPED_UNICODE);
-    }
-
 }

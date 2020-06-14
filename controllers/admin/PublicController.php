@@ -76,7 +76,7 @@ class PublicController extends Controller
      * @param string $jumpUrl 跳转链接
      * @return string
      */
-    public function error($message, $jumpSeconds = 3, $jumpUrl = '')
+    protected function error($message, $jumpSeconds = 3, $jumpUrl = '')
     {
         $jumpUrl = $jumpUrl ? Url::toRoute($jumpUrl) : \Yii::$app->request->referrer;
 
@@ -87,7 +87,7 @@ class PublicController extends Controller
      * 判断是否已经安装过
      * @return bool
      */
-    public function isInstalled()
+    protected function isInstalled()
     {
         return file_exists(Yii::getAlias("@runtime") . '/install/install.lock');
     }

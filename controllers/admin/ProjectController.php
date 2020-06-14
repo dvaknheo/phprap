@@ -3,9 +3,14 @@ namespace app\controllers\admin;
 
 use Yii;
 use yii\web\Response;
+
+use app\helpers\ControllerHelper;
+
+use app\services\AdminService;
 use app\models\Project;
 use app\models\project\DeleteProject;
 use app\models\project\RecoverProject;
+
 
 class ProjectController extends PublicController
 {
@@ -16,10 +21,7 @@ class ProjectController extends PublicController
     public function actionIndex()
     {
         $params = Yii::$app->request->queryParams;
-        $params['status'] = Project::ACTIVE_STATUS;
-
-        $model = Project::findModel()->search($params);
-
+        $model = AdminService::G()->searchProject($params);
         return $this->display('index', ['project' => $model]);
     }
 
@@ -31,11 +33,7 @@ class ProjectController extends PublicController
     public function actionRecycle()
     {
         $params = Yii::$app->request->queryParams;
-        $params['status']  = Project::DELETED_STATUS;
-        $params['orderBy'] = 'updated_at desc';
-
-        $model = Project::findModel()->search($params);
-
+        $model = AdminService::G()->searchProjectRecycled($params);
         return $this->display('recycle', ['project' => $model]);
     }
 
@@ -46,25 +44,13 @@ class ProjectController extends PublicController
      */
     public function actionDelete($id)
     {
-        $request = Yii::$app->request;
-
-        $model = DeleteProject::findModel(['encode_id' => $id]);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if($model->delete()) {
-                return ['status' => 'success', 'message' => '删除成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('删除成功',function($post) use ($id) {
+            AdminService::G()->deleteProject($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = AdminService::G()->getProejctForDelete($id);
         return $this->display('delete', ['project' => $model]);
     }
 
@@ -75,25 +61,13 @@ class ProjectController extends PublicController
      */
     public function actionRecover($id)
     {
-        $request = Yii::$app->request;
-
-        $model = RecoverProject::findModel(['encode_id' => $id]);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if($model->delete()) {
-                return ['status' => 'success', 'message' => '恢复成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('恢复成功',function($post) use ($id) {
+            AdminService::G()->recoverProject($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = AdminService::G()->getProejctForRecycle($id);
         return $this->display('recover', ['project' => $model]);
     }
 

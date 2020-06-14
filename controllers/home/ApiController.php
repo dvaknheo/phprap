@@ -116,6 +116,9 @@ class ApiController extends PublicController
         }
 
     }
+    protected dofoo()
+    {
+    }
 
     /**
      * 添加接口

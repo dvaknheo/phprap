@@ -258,6 +258,7 @@ class ProjectController extends PublicController
 
         $model   = TransferProject::findModel(['encode_id' => $id]);
 
+        //转让成功
         if($request->isPost) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -267,7 +268,7 @@ class ProjectController extends PublicController
             }
 
             if ($model->transfer()) {
-                return ['status' => 'success', 'message' => '转让成功', 'callback' => url('home/project/select')];
+                return ['callback' => url('home/project/select')];
             }
 
             return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
@@ -350,21 +351,10 @@ class ProjectController extends PublicController
 
         $model = DeleteProject::findModel(['encode_id' => $id]);
 
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if($model->delete()) {
-                return ['status' => 'success', 'message' => '删除成功', 'callback' => url('home/project/select')];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
-        }
+        ControllerHelper::AjaxPost('删除成功',function($post) {
+            ProjectService::G()->delete();
+            ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
+        });
 
         return $this->display('delete', ['project' => $model]);
     }
@@ -386,20 +376,10 @@ class ProjectController extends PublicController
 
         $member = Member::findModel(['project_id' => $model->id, 'user_id' => Yii::$app->user->identity->id]);
 
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if($model->quit()) {
-                return ['status' => 'success', 'message' => '退出成功', 'callback' => url('home/project/select')];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-        }
+        ControllerHelper::AjaxPost('OK',function($post)use($id){
+            ProjectService::G()->quit($post);
+            ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
+        });
 
         return $this->display('quit', ['project' => $model, 'member' => $member]);
     }

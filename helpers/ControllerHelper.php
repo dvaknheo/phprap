@@ -30,6 +30,7 @@ class ControllerHelper
         if(!$request->isPost){
             return null;
         }
+        $post=$request->post();
         Yii::$app->response->format = Response::FORMAT_JSON;
         try{
             static::$ExtJsonData=[];

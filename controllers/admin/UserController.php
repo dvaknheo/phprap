@@ -16,9 +16,7 @@ class UserController extends PublicController
     public function actionIndex()
     {
         $params = Yii::$app->request->queryParams;
-        $params['type'] = Account::USER_TYPE;
-
-        $model = Account::findModel()->search($params);
+        $model = AdminService::G()->searchUser($params);
 
         return $this->display('index', ['user' => $model]);
     }
@@ -29,26 +27,13 @@ class UserController extends PublicController
      */
     public function actionProfile($id)
     {
-        $request  = Yii::$app->request;
-        $response = Yii::$app->response;
-
-        $model = ProfileForm::findModel($id);
-
-        if($request->isPost){
-
-            $response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'ProfileForm'];
-            }
-
-            if($model->store()) {
-                return ['status' => 'success', 'message' => '编辑成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id){
+            AdminService::G()->setUserProfile($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = AdminService::G()->getUserProfile($id);
         return $this->display('profile', ['user' => $model]);
     }
 
@@ -58,25 +43,13 @@ class UserController extends PublicController
      */
     public function actionPassword($id)
     {
-        $request = Yii::$app->request;
-
-        $model = PasswordForm::findModel($id);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'PasswordForm'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '密码重置成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
+            AdminService::G()->foo($post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = AdminService::G()->foo($id);
         return $this->display('password', ['user' => $model]);
     }
 

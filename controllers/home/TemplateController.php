@@ -24,23 +24,13 @@ class TemplateController extends PublicController
 
         $model = new CreateTemplate();
 
-        if($request->isPost) {
+        ControllerHelper::AjaxPost('添加成功',function()use($project_id){
+            $encode_id="???";
+            TemplateService::G()->create($project_id,$request->post('header'),$request->post('request'),$request->post('response'));
+            $callback = url('home/project/show', ['id' => $encode_id, 'tab' => 'template']);
+            ControllerHelper::AjaxPostExtData(['callback' => $callback];
 
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model->project_id = $project->id;
-            $model->header_fields   = $this->form2json($request->post('header'));
-            $model->request_fields  = $this->form2json($request->post('request'));
-            $model->response_fields = $this->form2json($request->post('response'));
-
-            if($model->store()) {
-                $callback = url('home/project/show', ['id' => $project->encode_id, 'tab' => 'template']);
-                return ['status' => 'success', 'message' => '添加成功', 'callback' => $callback];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
-        }
+        });
 
         return $this->display('create', ['project' => $project, 'field' => $field, 'template' => $model]);
     }
@@ -57,21 +47,12 @@ class TemplateController extends PublicController
         $model   = UpdateTemplate::findModel(['encode_id' => $id]);
         $field   = new Field();
 
-        if($request->isPost){
+        ControllerHelper::AjaxPost('添加成功',function()use($id){
+            TemplateService::G()->update($project_id,$request->post('header'),$request->post('request'),$request->post('response'));
+            $callback = url('home/project/show', ['id' => $encode_id, 'tab' => 'template']);
+            ControllerHelper::AjaxPostExtData(['callback' => $callback];
 
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model->header_fields   = $this->form2json($request->post('header'));
-            $model->request_fields  = $this->form2json($request->post('request'));
-            $model->response_fields = $this->form2json($request->post('response'));
-
-            if($model->store()) {
-                $callback = url('home/project/show', ['id' => $model->project->encode_id, 'tab' => 'template']);
-                return ['status' => 'success', 'message' => '编辑成功', 'callback' => $callback];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-        }
+        });
 
         return $this->display('update', ['project' => $model->project, 'field' => $field, 'template' => $model]);
 
