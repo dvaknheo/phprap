@@ -9,7 +9,7 @@ use yii\web\Response;
 class ControllerHelper
 {
     protected static $ExtJsonData=[];
-    /*
+    
     public static function IsAjax()
     {
         $request = Yii::$app->request;
@@ -19,7 +19,7 @@ class ControllerHelper
         }
         return false;
     }
-    */
+    //*/
     public static function AjaxPostExtData($data)
     {
         static::$ExtJsonData = $data;
