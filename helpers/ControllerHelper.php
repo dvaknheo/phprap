@@ -52,5 +52,8 @@ class ControllerHelper
             return Yii::$app->request->post();
         }
     }
-
+    public static function WrapExceptionOnce($object)
+    {
+        //TODO
+    }
 }

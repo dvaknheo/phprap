@@ -79,9 +79,9 @@ class AdminService extends BaseService
     public function setUserProfile($id,$post)
     {
         $model = ProfileForm::findModel($id);
-        $flag= $model->load($post);
+        $flag = $model->load($post);
         BaseServiceException::AssertOn($flag,'加载数据失败','ProfileForm');
-        $flag=$model->store();
+        $flag = $model->store();
         BaseServiceException::AssertWithModel($flag,$model);
     }
     public function getUserProfile($id)
@@ -91,9 +91,9 @@ class AdminService extends BaseService
     public function setUserPassword($id,$post)
     {
         $model = PasswordForm::findModel($id);
-        $flag= $model->load($post);
+        $flag = $model->load($post);
         BaseServiceException::AssertOn($flag,'加载数据失败','PasswordForm');
-        $flag=$model->store();
+        $flag =$model->store();
         BaseServiceException::AssertWithModel($flag,$model);
     }
     public function getUserPassword($id)
@@ -140,7 +140,7 @@ class AdminService extends BaseService
         $conflict_list = array_intersect($ip_white_list, $ip_black_list);
 
         $flag = array_filter($conflict_list);
-        BaseServiceException::AssertOn($flag,'黑名单和白名单里不能出现相同的IP');
+        BaseServiceException::AssertOn(!$flag,'黑名单和白名单里不能出现相同的IP');
         
         // 判断邮箱后缀是否同时存在于白名单和黑名单
         $email_white_list = explode('\r\n', trim($data['email_white_list']));
@@ -149,7 +149,7 @@ class AdminService extends BaseService
         $conflict_list = array_intersect($email_white_list, $email_black_list);
 
         $flag = array_filter($conflict_list);
-        BaseServiceException::AssertOn($flag,'黑名单和白名单里不能出现相同的IP');
+        BaseServiceException::AssertOn(!$flag,'黑名单和白名单里不能出现相同的IP');
         
         $config->content  =  json_encode($data, JSON_UNESCAPED_UNICODE);
         $flag = $config->save();

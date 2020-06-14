@@ -3,12 +3,10 @@ namespace app\controllers\home;
 
 use Yii;
 use yii\helpers\Url;
-use yii\web\Response;
-use app\models\Config;
-use app\models\account\LoginForm;
-use app\models\account\PasswordForm;
-use app\models\account\ProfileForm;
-use app\models\account\RegisterForm;
+
+use app\helpers\ControllerHelper;
+use app\services\AccountService;
+
 
 class AccountController extends PublicController
 {
@@ -20,26 +18,15 @@ class AccountController extends PublicController
      */
     public function actionRegister()
     {
-        $request  = Yii::$app->request;
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model = new RegisterForm();
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '加载数据失败'];
-            }
-
-            if ($model->register()) {
-                return ['status' => 'success', 'message' => '注册成功', 'callback' => Url::toRoute(['project/select'])];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('注册成功',function($post) {
+            AccountService::G()->regist($post);
+            ControllerHelper::AjaxPostExtData(['callback' => Url::toRoute(['project/select'])]);
+        });
+        if($ret){
+            return $ret;
         }
 
-        $config = Config::findOne(['type' => 'safe']);
+        $config = AccountService::G()->getRegistInfo();
 
         return $this->display('register', ['config' => $config]);
     }
@@ -56,26 +43,17 @@ class AccountController extends PublicController
         if(!Yii::$app->user->isGuest){
             return $this->redirect(['home/project/select']);
         }
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model = new LoginForm();
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '加载数据失败'];
-            }
-
-            if ($model->login()) {
-                $callback = $model->callback ? $model->callback : Url::toRoute(['home/project/select']);
-                return ['status' => 'success', 'message' => '登录成功', 'callback' => $callback];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('登录成功',function($post) {
+            $callback = AccountService::G()->login($post);
+            $callback = $callback ? $callback : Url::toRoute(['home/project/select']);
+            ControllerHelper::AjaxPostExtData(['callback' => $callback]);
+        });
+        if($ret){
+            return $ret;
         }
 
-        $config = Config::findOne(['type' => 'safe']);
+        $config = AccountService::G()->getLoginInfo();
+
 
         return $this->render('login', ['callback' => $request->get('callback', ''), 'config' => $config]);
     }
@@ -113,26 +91,12 @@ class AccountController extends PublicController
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
-
-        $request = Yii::$app->request;
-
-        $model = ProfileForm::findModel(Yii::$app->user->identity->id);
-
-        if($request->isPost){
-
-            $model->scenario = 'home';
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'ProfileForm'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '修改成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $user_id=Yii::$app->user->identity->id;
+        $ret = ControllerHelper::AjaxPost('修改成功',function($post) use($user_id) {
+            AccountService::G()->setProfile($user_id, $post);
+        });
+        if($ret){
+            return $ret;
         }
 
         return $this->display('profile');
@@ -147,27 +111,12 @@ class AccountController extends PublicController
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
-
-        $request = Yii::$app->request;
-
-        $model = PasswordForm::findModel(Yii::$app->user->identity->id);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model->scenario = 'home';
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'PasswordForm'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '密码修改成功，请重新登录'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $user_id=Yii::$app->user->identity->id;
+        $ret = ControllerHelper::AjaxPost('密码修改成功，请重新登录',function($post) user($user_id) {
+            AccountService::G()->setPassword($user_id, $post);
+        });
+        if($ret){
+            return $ret;
         }
 
         return $this->display('password');
