@@ -6,6 +6,13 @@ class BaseServiceException extends \Exception
 {
     protected $label;
     protected $model;
+    public static function ThrowOn($flag,$message)
+    {
+        if(!$flag){
+            return;
+        }
+        throw (new static($message));
+    }
     public static function AssertOn($flag,$message,$modelName=null)
     {
         if($flag){
