@@ -2,12 +2,9 @@
 namespace app\controllers\home;
 
 use Yii;
-use yii\helpers\Html;
-use yii\web\Response;
-use app\models\Project;
-use app\models\Field;
-use app\models\template\CreateTemplate;
-use app\models\template\UpdateTemplate;
+use app\helpers\ControllerHelper;
+use app\services\TemplateService;
+
 
 class TemplateController extends PublicController
 {
@@ -17,22 +14,16 @@ class TemplateController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $request = Yii::$app->request;
-
-        $project = Project::findModel(['encode_id' => $project_id]);
-        $field = new Field();
-
-        $model = new CreateTemplate();
-
-        ControllerHelper::AjaxPost('添加成功',function()use($project_id){
-            $encode_id="???";
-            TemplateService::G()->create($project_id,$request->post('header'),$request->post('request'),$request->post('response'));
-            $callback = url('home/project/show', ['id' => $encode_id, 'tab' => 'template']);
-            ControllerHelper::AjaxPostExtData(['callback' => $callback];
-
+        $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
+            $id = TemplateService::G()->create($project_id,$post);
+            $callback = url('home/project/show', ['id' => $id, 'tab' => 'template']);
+            ControllerHelper::AjaxPostExtData(['callback' => $callback]);
         });
-
-        return $this->display('create', ['project' => $project, 'field' => $field, 'template' => $model]);
+        if($ret){
+            return $ret;
+        }
+        $data = TemplateService::G()->getDataForCreate($project_id);
+        return $this->display('create', $data);
     }
 
     /**
@@ -42,19 +33,16 @@ class TemplateController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $request = Yii::$app->request;
-
-        $model   = UpdateTemplate::findModel(['encode_id' => $id]);
-        $field   = new Field();
-
-        ControllerHelper::AjaxPost('添加成功',function()use($id){
-            TemplateService::G()->update($project_id,$request->post('header'),$request->post('request'),$request->post('response'));
-            $callback = url('home/project/show', ['id' => $encode_id, 'tab' => 'template']);
-            ControllerHelper::AjaxPostExtData(['callback' => $callback];
-
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
+            $id = TemplateService::G()->update($id,$post);
+            $callback = url('home/project/show', ['id' => $id, 'tab' => 'template']);
+            ControllerHelper::AjaxPostExtData(['callback' => $callback]);
         });
-
-        return $this->display('update', ['project' => $model->project, 'field' => $field, 'template' => $model]);
-
+        if($ret){
+            return $ret;
+        }
+        
+        $data = TemplateService::G()->getDataForCreate($id);
+        return $this->display('update', $data);
     }
 }
