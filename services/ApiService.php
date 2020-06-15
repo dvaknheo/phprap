@@ -249,19 +249,20 @@ class ApiService extends BaseService
         
         return $model->module->project->encode_id;
     }
-    public function show($id,$params, $tab = 'home')
+    public function show($id,$tab,$params,$is_guest,$is_admin)
     {
         $api = Api::findModel(['encode_id' => $id]);
 
         if (!$api->id) {
             BaseServiceException::ThrowOn(true, '抱歉，接口不存在或者已被删除');
         }
-        if (!Yii::$app->user->identity->isAdmin && $api->status !== $api::ACTIVE_STATUS) {
+        //TODO 放到参数里
+        if (!$is_admin && $api->status !== $api::ACTIVE_STATUS) {
             BaseServiceException::ThrowOn(true, '抱歉，接口已被禁用或已被删除');
         }
 
         if ($api->project->isPrivate()) {
-            if (Yii::$app->user->isGuest) {
+            if ($is_guest) {
                 return ['__redirect'=>true];
             }
             if (!$api->project->hasAuth(['project' => 'look'])) {

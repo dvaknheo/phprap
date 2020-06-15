@@ -46,11 +46,7 @@ class ProjectController extends PublicController
 
         $params = Yii::$app->request->queryParams;
 
-        $params['status'] = Project::ACTIVE_STATUS;
-        $params['type']   = Project::PUBLIC_TYPE;
-
-        $model = Project::findModel()->search($params);
-
+        $model = ProjectService::G()->search($params);
         return $this->display('search', ['project' => $model]);
     }
 
@@ -60,30 +56,17 @@ class ProjectController extends PublicController
      */
     public function actionCreate()
     {
-        $request = Yii::$app->request;
-
         if(Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login']);
         }
 
-        $model = new CreateProject();
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败'];
-            }
-
-            if($model->store()) {
-                return ['status' => 'success', 'message' => '添加成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('添加成功',function($post) {
+            ProjectService::G()->create($post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = ProjectService::G()->getDataForCreate();
         return $this->display('create', ['project' => $model]);
     }
 
@@ -94,30 +77,17 @@ class ProjectController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $request = Yii::$app->request;
-
         if(Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login']);
         }
 
-        $model = UpdateProject::findModel(['encode_id' => $id]);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败'];
-            }
-
-            if($model->store()) {
-                return ['status' => 'success', 'message' => '编辑成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
+            ProjectService::G()->update($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = ProjectService::G()->getDataForUpdate($id);
         return $this->display('update', ['project' => $model]);
     }
 
@@ -129,86 +99,26 @@ class ProjectController extends PublicController
      */
     public function actionShow($id, $tab = 'home')
     {
-        $project = Project::findModel(['encode_id' => $id]);
-
-        if(!$project->id){
-            return $this->error('抱歉，项目不存在或者已被删除');
-        }
-
-        if(!Yii::$app->user->identity->isAdmin && $project->status !== $project::ACTIVE_STATUS){
-            return $this->error('抱歉，项目已被禁用或已被删除');
-        }
-
-        if($project->isPrivate()) {
-            if(Yii::$app->user->isGuest) {
-                return $this->redirect(['home/account/login','callback' => Url::current()]);
-            }
-
-            if(!$project->hasAuth(['project' => 'look'])) {
-                return $this->error('抱歉，您无权查看');
-            }
-        }
-
-        $assign['project'] = $project;
-
         $params = Yii::$app->request->queryParams;
-
-        $params['project_id'] = $project->id;
-
-        switch ($tab) {
-            case 'home':
-
-                $view  = '/home/project/home';
-
-                break;
-            case 'template':
-
-                if(!$project->hasAuth(['template' => 'look'])) {
-                    return $this->error('抱歉，您无权查看');
-                }
-
-                $assign['template'] = Template::findModel(['project_id' => $project->id]);
-                $assign['field'] = new Field();
-
-                $view  = '/home/template/home';
-
-                break;
-            case 'env':
-
-                if(!$project->hasAuth(['env' => 'look'])) {
-                    return $this->error('抱歉，您无权查看');
-                }
-
-                $view = '/home/env/index';
-
-                break;
-            case 'member':
-
-                if(!$project->hasAuth(['member' => 'look'])) {
-                    return $this->error('抱歉，您无权查看');
-                }
-
-                $assign['member'] = Member::findModel()->search($params);
-
-                $view  = '/home/member/index';
-
-                break;
-            case 'history':
-
-                if(!$project->hasAuth(['project' => 'history'])) {
-                    return $this->error('抱歉，您无权查看');
-                }
-
-                if(empty($params['object_name'])){
-                    $params['object_name'] = 'project,env,member,module';
-                }
-
-                $assign['history'] = ProjectLog::findModel()->search($params);
-
-                $view  = '/home/history/project';
-
-                break;
+        $is_guest = Yii::$app->user->isGuest;
+        $is_admin = Yii::$app->user->identity->isAdmin;
+        
+        try{
+            $assign = ProjectService::G()->show($id,$tab,$params,$is_guest,$is_admin);
+        }catch(BaseServiceException $ex){
+            return $this->error($ex->getErrorMessage());
         }
+        if(isset($assign['__redirect'])){
+            return $this->redirect(['home/account/login', 'callback' => Url::current()]);
+        }
+        $view_map=[
+            'home'      => '/home/project/home',
+            'template'  => '/home/template/home',
+            'env'       => '/home/env/index',
+            'member'    => '/home/member/index',
+            'history'   => '/home/history/project',
+        ];
+        $view = $view_map[$tab]??'/home/project/home';
 
         return $this->display($view, $assign);
     }
@@ -224,23 +134,9 @@ class ProjectController extends PublicController
         if(Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login']);
         }
-
+        
         Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $project = Project::findModel(['encode_id' => $id]);
-
-        $members = $project->members;
-
-        $user    = [];
-
-        foreach ($members as $k => $member){
-            if(strpos($member->account->name, $name) !== false || strpos($member->account->email, $name) !== false){
-                $user[$k]['id']   = $member->account->id;
-                $user[$k]['name'] = $member->account->fullName;
-            }
-        }
-        // 重建索引
-        return array_values($user);
+        return ProjectService::G()->getDataForMember($id, $name);
     }
 
     /**
@@ -254,27 +150,14 @@ class ProjectController extends PublicController
             return $this->redirect(['home/account/login']);
         }
 
-        $request = Yii::$app->request;
-
-        $model   = TransferProject::findModel(['encode_id' => $id]);
-
-        //转让成功
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败'];
-            }
-
-            if ($model->transfer()) {
-                return ['callback' => url('home/project/select')];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('转让成功',function($post)use($id) {
+            ProjectService::G()->transfer($id,$post);
+            ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model   = ProjectService::G()->getDataForTransfer($id);
         return $this->display('transfer', ['project' => $model]);
     }
 
@@ -287,44 +170,15 @@ class ProjectController extends PublicController
     {
         $project = Project::findModel(['encode_id' => $id]);
 
-        if(!$project->hasAuth(['project' => 'export'])){
-            return $this->error("抱歉，您没有操作权限!");
+        try{
+            ProjectService::G()->getDataForExport($id,$format);
+         }catch(BaseServiceException $ex){
+            return $this->error($ex->getErrorMessage());
         }
-
-        $account = Yii::$app->user->identity;
-        $cache   = Yii::$app->cache;
-
-        $config = Config::findOne(['type' => 'app']);
-
-        $cache_key      = 'project_' . $id . '_' . $account->id;
-        $cache_interval = (int)$config->export_time;
-
-//        if($cache_interval >0 && $cache->get($cache_key) !== false){
-//            $remain_time = $cache->get($cache_key)  - time();
-//            if($remain_time >0 && $remain_time < $cache_interval){
-//                return $this->error("抱歉，导出太频繁，请{$remain_time}秒后再试!", 5);
-//            }
-//        }
-
-        // 限制导出频率, 60秒一次
-        $cache_interval >0 && Yii::$app->cache->set($cache_key, time() + $cache_interval, $cache_interval);
-
+        
         $file_name = $project->title . '离线文档' . '.' . $format;
 
-        // 记录操作日志
-        $log = new CreateLog();
-        $log->project_id  = $project->id;
-        $log->object_name = 'project';
-        $log->object_id   = $project->id;
-        $log->type        = 'export';
-        $log->content     = '导出了 ' . '<code>' . $file_name . '</code>';
-
-        if(!$log->store()){
-            return $this->error($log->getErrorMessage());
-        }
-
         header ("Content-Type: application/force-download");
-
         switch ($format) {
             case 'html':
                 header ("Content-Disposition: attachment;filename=$file_name");
@@ -347,15 +201,14 @@ class ProjectController extends PublicController
             return $this->redirect(['home/account/login']);
         }
 
-        $request = Yii::$app->request;
-
-        $model = DeleteProject::findModel(['encode_id' => $id]);
-
-        ControllerHelper::AjaxPost('删除成功',function($post) {
-            ProjectService::G()->delete();
+        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
+            ProjectService::G()->delete($id,$post);
             ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
         });
-
+        if($ret){
+            return $ret;
+        }
+        $model   = ProjectService::G()->getDataForDelete($id);
         return $this->display('delete', ['project' => $model]);
     }
 
@@ -369,18 +222,16 @@ class ProjectController extends PublicController
         if(Yii::$app->user->isGuest) {
             return $this->redirect(['home/account/login']);
         }
-
-        $request = Yii::$app->request;
-
-        $model  = QuitProject::findModel(['encode_id' => $id]);
-
-        $member = Member::findModel(['project_id' => $model->id, 'user_id' => Yii::$app->user->identity->id]);
-
-        ControllerHelper::AjaxPost('OK',function($post)use($id){
-            ProjectService::G()->quit($post);
+        $user_id = Yii::$app->user->identity->id;
+        
+        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
+            ProjectService::G()->quit($id,$post);
             ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
         });
-
-        return $this->display('quit', ['project' => $model, 'member' => $member]);
+        if($ret){
+            return $ret;
+        }
+        $data  = ProjectService::G()->getDataForQuit($id,$user_id);
+        return $this->display('quit', $data);
     }
 }

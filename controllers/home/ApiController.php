@@ -105,32 +105,23 @@ class ApiController extends PublicController
     public function actionShow($id, $tab = 'home')
     {
         $params = Yii::$app->request->queryParams;
+        $is_guest = Yii::$app->user->isGuest;
+        $is_admin = Yii::$app->user->identity->isAdmin;
         try{
-            $assign = ApiService::G()->show($id,$params, $tab);
+            $assign = ApiService::G()->show($id,$tab,$params,$is_guest,$is_admin);
         }catch(BaseServiceException $ex){
             return $this->error($ex->getErrorMessage());
         }
         if(isset($assign['__redirect'])){
             return $this->redirect(['home/account/login', 'callback' => Url::current()]);
         }
-        switch ($tab) {
-            case 'home':
-                $view = '/home/api/home';
-                break;
-            case 'field':
-                $view = '/home/field/home';
-                break;
-            case 'debug':
-                $view = '/home/api/debug';
-                break;
-            case 'history':
-                $view = '/home/history/api';
-                break;
-            default:
-                $view = '/home/api/home';
-                break;
-        }
-
+        $view_map=[
+            'home'      => '/home/api/home',
+            'field'     => '/home/field/home',
+            'debug'     => '/home/api/debug',
+            'history'   => '/home/history/api',
+        ];
+        $view = $view_map[$tab]??'/home/api/home';
         return $this->display($view, $assign);
 
     }
