@@ -10,7 +10,7 @@ use app\models\apply\UpdateApply;
 use app\models\member\CreateMember;
 
 
-class ApplyService
+class ApplyService extends BaseService
 {
     public function search($params)
     {

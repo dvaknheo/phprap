@@ -2,16 +2,8 @@
 namespace app\services;
 
 use Yii;
-class CacheService
+class CacheService extends BaseService
 {
-    public function G()
-    {
-        static $instance;
-        $instance = $instance ?? new static();
-        
-        return $instance;
-    }
-    
     public function installStep($new=null)
     {
         if($new!==null){

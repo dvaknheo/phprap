@@ -9,7 +9,7 @@ use app\models\field\CreateField;
 use app\models\field\UpdateField;
 
 
-class FileddService
+class FileddService extends BaseService
 {
     public function create($api_id,$post)
     {

@@ -7,7 +7,7 @@ use app\models\account\PasswordForm;
 use app\models\account\ProfileForm;
 use app\models\account\RegisterForm;
 
-class AccountService
+class AccountService extends BaseService
 {
     public function regist($post)
     {

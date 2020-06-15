@@ -8,7 +8,7 @@ use app\models\env\DeleteEnv;
 use app\models\env\UpdateEnv;
 
 
-class EnvService
+class EnvService extends BaseService
 {
     public function create($project_id,$post)
     {

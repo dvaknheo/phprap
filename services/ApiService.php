@@ -14,7 +14,7 @@ use app\models\projectLog\CreateLog;
 use Curl\Curl;
 
 
-class ApiService
+class ApiService extends BaseService
 {
     public function XX($post)
     {

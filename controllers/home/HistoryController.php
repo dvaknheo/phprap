@@ -2,8 +2,7 @@
 namespace app\controllers\home;
 
 use Yii;
-use app\models\Apply;
-use app\models\LoginLog;
+use app\serivces\HistoryService;
 
 class HistoryController extends PublicController
 {
@@ -15,9 +14,9 @@ class HistoryController extends PublicController
     public function actionLogin()
     {
         $params = Yii::$app->request->queryParams;
-        $params['user_id'] = Yii::$app->user->identity->id;
+        $user_id = Yii::$app->user->identity->id;
 
-        $model = LoginLog::findModel()->search($params);
+        $model = HistoryService::G()->searchLoginLog($user_id,$params);
 
         return $this->display('login', ['model' => $model]);
     }
@@ -29,13 +28,9 @@ class HistoryController extends PublicController
     public function actionApply()
     {
         $params = Yii::$app->request->queryParams;
+        $user_id = Yii::$app->user->identity->id;
 
-        $params['creater_id'] = Yii::$app->user->identity->id;
-        $params['pass_status'] = Apply::PASS_STATUS;
-        $params['refuse_status'] = Apply::REFUSE_STATUS;
-        $params['order_by'] = 'checked_at desc';
-
-        $model = Apply::findModel()->search($params);
+        $model = HistoryService::G()->searchAppley($user_id,$params);
 
         return $this->display('apply', ['model' => $model]);
     }
