@@ -2,11 +2,8 @@
 namespace app\controllers\home;
 
 use Yii;
-use yii\web\Response;
-use app\models\Project;
-use app\models\module\CreateModule;
-use app\models\module\UpdateModule;
-use app\models\module\DeleteModule;
+use app\helpers\ControllerHelper;
+use app\services\ModuleService;
 
 class ModuleController extends PublicController
 {
@@ -17,30 +14,12 @@ class ModuleController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $request = Yii::$app->request;
-
-        $project = Project::findModel(['encode_id' => $project_id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model = new CreateModule();
-
-            $model->project_id = $project->id;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '添加成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
+            ModuleService::G()->create($project_id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
         return $this->display('create');
     }
 
@@ -51,26 +30,13 @@ class ModuleController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $request = Yii::$app->request;
-
-        $model = UpdateModule::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '编辑成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
+            ModuleService::G()->update($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = ModuleService::G()->getDataForUpdate($id);
         return $this->display('update', ['module' => $model]);
     }
 
@@ -81,27 +47,14 @@ class ModuleController extends PublicController
      */
     public function actionDelete($id)
     {
-        $request = Yii::$app->request;
-
-        $model  = DeleteModule::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->delete()) {
-                return ['status' => 'success', 'message' => '删除成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
+            ModuleService::G()->delete($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
-        return $this->display('delete', ['module' => $model]);
+        $model = ModuleService::G()->getDataForDelete($id);
+        return $this->display('update', ['module' => $model]);
     }
 
 
