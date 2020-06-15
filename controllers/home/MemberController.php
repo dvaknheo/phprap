@@ -2,12 +2,8 @@
 namespace app\controllers\home;
 
 use Yii;
-use yii\web\Response;
-use app\models\Member;
-use app\models\Project;
-use app\models\member\CreateMember;
-use app\models\member\UpdateMember;
-use app\models\member\RemoveMember;
+use app\helpers\ControllerHelper;
+use app\services\MemberService;
 
 class MemberController extends PublicController
 {
@@ -18,32 +14,15 @@ class MemberController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $request = Yii::$app->request;
-
-        $project = Project::findModel(['encode_id' => $project_id]);
-
-        $model   = new CreateMember();
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $model->project_id = $project->id;
-            $model->join_type  = Member::PASSIVE_JOIN_TYPE;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '添加成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        //
+        $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
+            MemberService::G()->create($project_id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
-        return $this->display('create', ['project' => $project, 'member' => $model]);
+        $data = MemberService::G()->getDataForCreate($project_id);
+        return $this->display('create', $data);
     }
 
     /**
@@ -53,26 +32,13 @@ class MemberController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $request = Yii::$app->request;
-
-        $model   = UpdateMember::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '编辑成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
+            MemberService::G()->update($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = MemberService::G()->getDataForUpdate($id);
         return $this->display('update', ['member' => $model]);
     }
 
@@ -85,19 +51,7 @@ class MemberController extends PublicController
     public function actionSelect($project_id, $name)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $project = Project::findModel(['encode_id' => $project_id]);
-
-        $notMembers = $project->getNotMembers(['name' => $name]);
-
-        $user = [];
-
-        foreach ($notMembers as $k => $member){
-            $user[$k]['id']   = $member->id;
-            $user[$k]['name'] = $member->fullName;
-        }
-
-        return $user;
+        return MemberService::G()->getDataForSelect($project_id, $name);
     }
 
     /**
@@ -107,25 +61,13 @@ class MemberController extends PublicController
      */
     public function actionRemove($id)
     {
-        $request = Yii::$app->request;
-
-        $model = RemoveMember::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败'];
-            }
-
-            if ($model->remove()) {
-                return ['status' => 'success', 'message' => '移出成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('移出成功',function($post)use($id) {
+            MemberService::G()->remove($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = MemberService::G()->getDataForRemove($id);
         return $this->display('remove', ['member' => $model]);
     }
 
@@ -136,7 +78,7 @@ class MemberController extends PublicController
      */
     public function actionShow($id)
     {
-        $member = Member::findModel(['encode_id' => $id]);
+        $member = MemberService::G()->getDataForShow($id);
 
         return $this->display('show', ['member' => $member]);
     }

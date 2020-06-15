@@ -57,25 +57,4 @@ class TemplateController extends PublicController
         return $this->display('update', ['project' => $model->project, 'field' => $field, 'template' => $model]);
 
     }
-
-    /**
-     * 表单过滤后转json
-     * @param $table
-     * @return false|string
-     */
-    private function form2json($table)
-    {
-        if(!is_array($table) || !$table){
-            return;
-        }
-        $array = [];
-        foreach ($table as $k => $v) {
-            foreach ($v as $k1 => $v1) {
-                $array[$k1][$k] = trim(Html::encode($v1));
-            }
-        }
-
-        return json_encode($array, JSON_UNESCAPED_UNICODE);
-    }
-
 }
