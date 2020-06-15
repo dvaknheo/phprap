@@ -2,12 +2,8 @@
 namespace app\controllers\home;
 
 use Yii;
-use yii\web\Response;
-use app\models\Project;
-use app\models\Apply;
-use app\models\apply\CreateApply;
-use app\models\apply\UpdateApply;
-use app\models\member\CreateMember;
+use app\helpers\ControllerHelper;
+use app\services\ApplyService;
 
 class ApplyController extends PublicController
 {
@@ -18,11 +14,7 @@ class ApplyController extends PublicController
     public function actionIndex()
     {
         $params = Yii::$app->request->queryParams;
-
-        $params['check_status'] = Apply::CHECK_STATUS;
-        $params['order_by']     = 'id desc';
-
-        $model = Apply::findModel()->search($params);
+        $model = ApplyService::G()->search($params);
 
         return $this->display('index', ['apply' => $model]);
     }
@@ -34,25 +26,14 @@ class ApplyController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $request = Yii::$app->request;
-
-        $model   = CreateApply::findModel();
-        $project = Project::findModel(['encode_id' => $project_id]);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            
-            $model->project_id = $project->id;
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '申请成功，请耐心等待项目创建人审核'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
+        $ret = ControllerHelper::AjaxPost('申请成功，请耐心等待项目创建人审核',function($post)use($project_id) {
+            ApplyService::G()->create($project_id);
+        });
+        if($ret){
+            return $ret;
         }
-
-        return $this->display('create', ['apply' => $model, 'project' => $project]);
+        $data = ApplyService::G()->getDataForCreate($project_id)
+        return $this->display('create', $data);
     }
 
     /**
@@ -62,51 +43,15 @@ class ApplyController extends PublicController
      */
     public function actionPass($id)
     {
-        $request = Yii::$app->request;
 
-        $model   = UpdateApply::findModel($id);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            // 开启事务
-            $transaction = Yii::$app->db->beginTransaction();
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败','model' => 'UpdateApply'];
-            }
-
-            $model->status = Apply::PASS_STATUS;
-
-            if(!$model->store()){
-                $transaction->rollBack();
-                return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-            }
-
-            // 向项目成员表插入数据
-            $member = CreateMember::findModel();
-            $member->project_id   = $model->project_id;
-            $member->user_id      = $model->user_id;
-            $member->join_type    = $member::INITIATIVE_JOIN_TYPE;
-            $member->project_rule = 'look';
-            $member->env_rule     = 'look';
-            $member->module_rule  = 'look';
-            $member->api_rule     = 'look';
-            $member->member_rule  = 'look';
-            $member->template_rule = 'look';
-
-            if(!$member->store()){
-                $transaction->rollBack();
-                return ['status' => 'error', 'message' => $member->getErrorMessage(), 'label' => $member->getErrorLabel()];
-            }
-
-            // 事务提交
-            $transaction->commit();
-
-            return ['status' => 'success', 'message' => '操作成功'];
+        $ret = ControllerHelper::AjaxPost('操作成功',function($post)use($id) {
+            ApplyService::G()->pass($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        
+        $model = ApplyService::G()->getDataForUpdate($id)
         return $this->display('check', ['apply' => $model]);
     }
 
@@ -118,34 +63,14 @@ class ApplyController extends PublicController
      */
     public function actionRefuse($id)
     {
-        $request = Yii::$app->request;
-
-        $model   = UpdateApply::findModel($id);
-
-        if($request->isPost) {
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            // 开启事务
-            $transaction = Yii::$app->db->beginTransaction();
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败','model' => 'UpdateApply'];
-            }
-
-            $model->status = Apply::REFUSE_STATUS;
-
-            if(!$model->store()){
-                $transaction->rollBack();
-                return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-            }
-
-            // 事务提交
-            $transaction->commit();
-
-            return ['status' => 'success', 'message' => '操作成功'];
+        $ret = ControllerHelper::AjaxPost('操作成功',function($post)use($id) {
+            ApplyService::G()->refuse($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        
+        $model = ApplyService::G()->getDataForUpdate($id)
         return $this->display('check', ['apply' => $model]);
     }
 
@@ -157,10 +82,7 @@ class ApplyController extends PublicController
     public function actionNotify()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $apply = Apply::findModel()->search(['check_status' => Apply::CHECK_STATUS]);
-
-        return ['count' => $apply->count];
+        return ApplyService::G()->getNotifyInfo();
     }
 
 }
