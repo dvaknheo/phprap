@@ -5,7 +5,7 @@ use app\models\Apply;
 use app\models\LoginLog;
 
 
-class HistorydService
+class HistoryService extends BaseService
 {
     public function searchLoginLog($user_id,$params)
     {

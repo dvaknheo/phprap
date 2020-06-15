@@ -1,9 +1,7 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
-use app\models\Project;
-use app\models\Api;
+use app\services\ImportService;
 
 class ImportController extends PublicController
 {
@@ -14,7 +12,7 @@ class ImportController extends PublicController
      */
     public function actionProject($id)
     {
-        $project = Project::findModel(['encode_id' => $id]);
+        $project = ImportService::G()->project($id);
 
         return $this->display('project', ['project' => $project]);
     }
@@ -26,7 +24,7 @@ class ImportController extends PublicController
      */
     public function actionApi($id)
     {
-        $api = Api::findModel(['encode_id' => $id]);
+        $api = ImportService::G()->api($id);
 
         return $this->display('api', ['api' => $api]);
     }
