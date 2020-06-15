@@ -2,11 +2,8 @@
 namespace app\controllers\home;
 
 use Yii;
-use yii\web\Response;
-use app\models\Project;
-use app\models\env\CreateEnv;
-use app\models\env\DeleteEnv;
-use app\models\env\UpdateEnv;
+use app\helpers\ControllerHelper;
+use app\services\EnvService;
 
 class EnvController extends PublicController
 {
@@ -17,30 +14,14 @@ class EnvController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $request = Yii::$app->request;
-
-        $project = Project::findModel(['encode_id' => $project_id]);
-
-        $model   = new CreateEnv();
-        $model->project_id = $project->id;
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if (!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'CreateEnv'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '创建成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('创建成功',function($post)use($project_id) {
+            EnvService::G()->create($project_id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
-        return $this->display('create', ['env' => $model->getNextEnv()]);
+        $model = EnvService::G()->getDataForCreate($project_id);
+        return $this->display('create', ['env' => $model]);
     }
 
     /**
@@ -51,25 +32,14 @@ class EnvController extends PublicController
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-
-        $model   = UpdateEnv::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())){
-                return ['status' => 'error', 'message' => '加载数据失败', 'model' => 'UpdateEnv'];
-            }
-
-            if ($model->store()) {
-                return ['status' => 'success', 'message' => '编辑成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
+            EnvService::G()->update($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        
+        $model = EnvService::G()->getDataForUpdate($id);
         return $this->display('update', ['env' => $model]);
     }
 
@@ -80,26 +50,13 @@ class EnvController extends PublicController
      */
     public function actionDelete($id)
     {
-        $request = Yii::$app->request;
-
-        $model   = DeleteEnv::findModel(['encode_id' => $id]);
-
-        if($request->isPost){
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            if(!$model->load($request->post())) {
-                return ['status' => 'error', 'message' => '数据加载失败', 'model' => 'DeleteEnv'];
-            }
-
-            if ($model->delete()) {
-                return ['status' => 'success', 'message' => '删除成功'];
-            }
-
-            return ['status' => 'error', 'message' => $model->getErrorMessage(), 'label' => $model->getErrorLabel()];
-
+        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
+            EnvService::G()->delete($id,$post);
+        });
+        if($ret){
+            return $ret;
         }
-
+        $model = EnvService::G()->getDataForDelete($id);
         return $this->display('delete', ['env' => $model]);
     }
 
