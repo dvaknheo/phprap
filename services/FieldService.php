@@ -56,7 +56,7 @@ class FileddService extends BaseService
         } else {
             $model->request_fields = UpdateField::form2json($post['request']);
         }
-        $model->header_fields = UpdateField::form2json($pos['header');
+        $model->header_fields = UpdateField::form2json($post['header']);
         $model->response_fields = UpdateField::form2json($post['response']);
 
         $flag = $model->store();

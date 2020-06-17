@@ -43,13 +43,13 @@ class UserController extends PublicController
      */
     public function actionPassword($id)
     {
-        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
-            AdminService::G()->foo($post);
+        $ret = ControllerHelper::AjaxPost('保存成功',function($post)use($id){
+            AdminService::G()->setUserPassword($id,$post);
         });
         if($ret){
             return $ret;
         }
-        $model = AdminService::G()->foo($id);
+        $model = AdminService::G()->setUserPassword($id);
         return $this->display('password', ['user' => $model]);
     }
 

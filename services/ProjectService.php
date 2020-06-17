@@ -122,7 +122,8 @@ class ProjectService extends BaseService
                     BaseServiceException::ThrowOn(true,'抱歉，您无权查看');
                 }
                 $params['project_id'] = $project->id;
-                $params['object_name'] = (empty($params['object_name'])?'project,env,member,module':$params['object_name'];
+                $params['object_name'] = $params['object_name']??'project,env,member,module';
+                
                 $assign['history'] = ProjectLog::findModel()->search($params);
                 break;
         }

@@ -112,7 +112,7 @@ class AccountController extends PublicController
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
         $user_id=Yii::$app->user->identity->id;
-        $ret = ControllerHelper::AjaxPost('密码修改成功，请重新登录',function($post) user($user_id) {
+        $ret = ControllerHelper::AjaxPost('密码修改成功，请重新登录',function($post) use($user_id) {
             AccountService::G()->setPassword($user_id, $post);
         });
         if($ret){

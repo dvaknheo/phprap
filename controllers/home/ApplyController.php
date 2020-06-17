@@ -32,7 +32,7 @@ class ApplyController extends PublicController
         if($ret){
             return $ret;
         }
-        $data = ApplyService::G()->getDataForCreate($project_id)
+        $data = ApplyService::G()->getDataForCreate($project_id);
         return $this->display('create', $data);
     }
 
@@ -51,7 +51,7 @@ class ApplyController extends PublicController
             return $ret;
         }
         
-        $model = ApplyService::G()->getDataForUpdate($id)
+        $model = ApplyService::G()->getDataForUpdate($id);
         return $this->display('check', ['apply' => $model]);
     }
 
@@ -70,7 +70,7 @@ class ApplyController extends PublicController
             return $ret;
         }
         
-        $model = ApplyService::G()->getDataForUpdate($id)
+        $model = ApplyService::G()->getDataForUpdate($id);
         return $this->display('check', ['apply' => $model]);
     }
 

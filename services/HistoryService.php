@@ -19,6 +19,6 @@ class HistoryService extends BaseService
         $params['refuse_status'] = Apply::REFUSE_STATUS;
         $params['order_by'] = 'checked_at desc';
 
-        $return Apply::findModel()->search($params);
+        return Apply::findModel()->search($params);
     }
 }

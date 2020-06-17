@@ -12,7 +12,7 @@ class ImportService extends BaseService
     }
     public function api($id)
     {
-        $return Api::findModel(['encode_id' => $id]);
+        return Api::findModel(['encode_id' => $id]);
     }
 
 }
