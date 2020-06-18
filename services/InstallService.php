@@ -3,21 +3,12 @@ namespace app\services;
 
 use Yii;
 use yii\db\Exception;
-use yii\web\Response;
 use app\models\Member;
 use app\models\Account;
 use app\models\loginLog\CreateLog;
-use app\services\InstallService;
 
-class Installservice
+class Installservice extends BaseService
 {
-    public function G()
-    {
-        static $instance;
-        $instance = $instance ?? new static();
-        
-        return $instance;
-    }
     public function isInstalled()
     {
         return file_exists(Yii::getAlias("@runtime") . '/install/install.lock');
@@ -89,7 +80,8 @@ class Installservice
         $sql = "CREATE DATABASE IF NOT EXISTS {$step2['dbname']} CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';";
 
         if(!$connection->createCommand($sql)->execute()){
-            throw new \Exception("数据库 {$step2['dbname']} 创建失败，没有创建数据库权限，请手动创建数据库");            }
+            throw new \Exception("数据库 {$step2['dbname']} 创建失败，没有创建数据库权限，请手动创建数据库");
+        }
 
         $db['dsn']         = "mysql:host={$step2['host']};port={$step2['port']};dbname={$step2['dbname']}";
         $db['tablePrefix'] = $step2['prefix'];
@@ -201,21 +193,14 @@ class Installservice
     {
         // 读取初始化数据库脚本文件内容
         $lines = file(Yii::getAlias("@runtime") .'/install/db.sql');
-
         $sql = "";
-
         // 循环排除掉不合法的sql语句
         foreach($lines as $line){
-
             $line = trim($line);
-
             if($line != ""){
-
                 if(!($line{0} == "#" || $line{0}.$line{1} == "--")){
-
                     // 将表前缀替换成自定义前缀
                     $line = str_replace("doc_", Yii::$app->db->tablePrefix, $line);
-
                     $sql .= $line;
                 }
             }

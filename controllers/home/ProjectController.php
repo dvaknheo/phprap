@@ -168,14 +168,13 @@ class ProjectController extends PublicController
      */
     public function actionExport($id, $format = 'html')
     {
-        $project = Project::findModel(['encode_id' => $id]);
 
         try{
             ProjectService::G()->getDataForExport($id,$format);
          }catch(BaseServiceException $ex){
             return $this->error($ex->getErrorMessage());
         }
-        
+        $project = Project::findModel(['encode_id' => $id]);
         $file_name = $project->title . '离线文档' . '.' . $format;
 
         header ("Content-Type: application/force-download");

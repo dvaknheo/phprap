@@ -3,12 +3,29 @@ namespace app\services;
 
 class BaseService
 {
-    public function G()
+    protected static $_instances = [];
+    /**
+     * 
+     * @param type $object
+     * @return \static
+     */
+    public static function G($object = null)
     {
-        static $instance;
-        $instance = $instance ?? new static();
+        if (defined('__SINGLETONEX_REPALACER')) {
+            $callback = __SINGLETONEX_REPALACER;
+            return ($callback)(static::class, $object);
+        }
+        if ($object) {
+            self::$_instances[static::class] = $object;
+            return $object;
+        }
+        $me = self::$_instances[static::class] ?? null;
+        if (null === $me) {
+            $me = new static();
+            self::$_instances[static::class] = $me;
+        }
         
-        return $instance;
+        return $me;
     }
     
     public function  doModel($model,$post)
