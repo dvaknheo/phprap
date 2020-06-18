@@ -23,23 +23,23 @@
 <!-- Bootstrap Core JavaScript -->
 <!-- Latest compiled and minified JavaScript -->
 
-<script src="{{STATIC_URL}}/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="{{STATIC_URL}}/plugins/layer/layer.min.js"></script>
-<script src="{{STATIC_URL}}/plugins/metismenu/js/metisMenu.min.js"></script>
+<script src="<?=STATIC_URL?>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<?=STATIC_URL?>/plugins/layer/layer.min.js"></script>
+<script src="<?=STATIC_URL?>/plugins/metismenu/js/metisMenu.min.js"></script>
 
-<script src="{{STATIC_URL}}/plugins/artdialog/js/dialog.min.js"></script>
+<script src="<?=STATIC_URL?>/plugins/artdialog/js/dialog.min.js"></script>
 
-<script src="{{STATIC_URL}}/plugins/validform/datatype.min.js?v={{STATIC_VERSION}}"></script>
+<script src="<?=STATIC_URL?>/plugins/validform/datatype.min.js?v=<?=STATIC_VERSION?>"></script>
 
 <!-- Custom Theme JavaScript -->
-<script src="{{STATIC_URL}}/js/app.min.js?v={{STATIC_VERSION}}"></script>
+<script src="<?=STATIC_URL?>/js/app.min.js?v=<?=STATIC_VERSION?>"></script>
 
 <script>
 $(function () {
-    {{if $account->id && config('app.is_push')}}
+    <?php if( $account->id && config('app.is_push')){?>
 
-    var url  = "{{url('home/apply/notify')}}";
-    var time = "{{config('app.push_time')}}";
+    var url  = "<?=url('home/apply/notify')?>";
+    var time = "<?=config('app.push_time')?>";
     setInterval(function(){
 
         $.get(url, function (json) {
@@ -49,7 +49,7 @@ $(function () {
     }, time*1000);
 
 
-    {{/if}}
+    <?php }?>
 });
 </script>
 </body>

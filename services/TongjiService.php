@@ -5,6 +5,41 @@ use Yii;
 
 class TongjiService extends Service
 {
+    public function getTongjiInfo()
+    {
+/*
+                                        <div>用户</div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="huge"><?=$tongji->getTotalAccount(null, 10)->count?></div>
+                                <div>今日新增 <?=$tongji->getTodayAccount(null, 10)->count?></div>
+                                <div>项目</div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="huge"><?=$tongji->getTotalProject(10)->count?></div>
+                                <div>今日新增 <?=$tongji->getTodayProject(10)->count?></div>
+
+                                <div>模块</div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="huge"><?=$tongji->getTotalModule(10)->count?></div>
+                                <div>今日新增 <?=$tongji->getTodayModule(10)->count?></div>
+
+                                <div>接口</div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="huge"><?=$tongji->getTotalApi(10)->count?></div>
+                                <div>今日新增 <?=$tongji->getTodayApi(10)->count?></div>
+                            </div>
+
+                        {value:<?=$tongji->getTotalAccount(10, 10)->count?>, name:'有效用户'},
+                        {value:<?=$tongji->getTotalAccount(20, 10)->count?>, name:'禁用用户'},
+
+                        {value:<?=$tongji->getTotalProject(10)->count?>, name:'有效项目'},
+                        {value:<?=$tongji->getTotalProject(30)->count?>, name:'删除项目'},
+                        
+//*/
+    }
     /**
      * 获取全部会员
      * @return Account|null
