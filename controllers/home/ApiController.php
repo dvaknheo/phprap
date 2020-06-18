@@ -40,7 +40,6 @@ class ApiController extends PublicController
      */
     public function actionCreate($module_id)
     {
-        var_dump("BUG");
         $ret = ControllerHelper::AjaxPost('创建成功',function($post) {
             $encode_id = ApiService::G()->create($post);
             $callback = url('home/api/show', ['id' => $encode_id]);
@@ -49,7 +48,7 @@ class ApiController extends PublicController
         if($ret){
             return $ret;
         }
-        $data = ApiService::G()->getDataForCreate(module_id);
+        $data = ApiService::G()->getDataForCreate($module_id);
 
         return $this->display('create',$data);
     }
@@ -61,7 +60,6 @@ class ApiController extends PublicController
      */
     public function actionUpdate($id)
     {
-        var_dump("BUG");
         $ret = ControllerHelper::AjaxPost('编辑成功',function($post) use($id) {
             $encode_id = ApiService::G()->update($module_id, $post);
             $callback = url('home/api/show', ['id' => $encode_id]);
@@ -70,7 +68,7 @@ class ApiController extends PublicController
         if($ret){
             return $ret;
         }
-        $data = ApiService::G()->getDataForUpdate($module_id);
+        $data = ApiService::G()->getDataForUpdate($id);
 
 
         return $this->display('update', $data);
