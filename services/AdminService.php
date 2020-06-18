@@ -20,7 +20,7 @@ class AdminService extends BaseService
     public function getDataForHome()
     {
             // 系统信息
-        $system['installed_at']  = Project::findModel()->getInstallTime();
+        $system['installed_at']  = InstallLib::G()->getInstallTime();
         $system['app_os']        = PHP_OS;
         $system['app_version']   = Yii::$app->params['app_version'];
         $system['php_version']   = PHP_VERSION;

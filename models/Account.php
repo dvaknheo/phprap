@@ -153,5 +153,20 @@ class Account extends User
 
         return $this;
     }
+    public function createAccount($name,$email,$password)
+    {
+        $this->status = $this::ACTIVE_STATUS;
+        $this->type   = $this::ADMIN_TYPE;
+        $this->name   = $name;
+        $this->email  = $email;
+        $this->ip     = $this->getUserIp();
+        $this->location   = $this->getLocation();
+        $this->created_at = date('Y-m-d H:i:s');
+
+        $this->setPassword($password);
+        $this->generateAuthKey();
+
+        return $this->save();
+    }
 
 }

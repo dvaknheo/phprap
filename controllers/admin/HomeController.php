@@ -1,9 +1,9 @@
 <?php
 namespace app\controllers\admin;
 
-use Yii;
 use yii\helpers\Url;
 use app\services\AdminService;
+use app\services\SessionService;
 
 class HomeController extends PublicController
 {
@@ -14,10 +14,9 @@ class HomeController extends PublicController
      */
     public function actionIndex()
     {
-        if(Yii::$app->user->isGuest){
+        if(SessionService::G()->isGuest()){
             return $this->redirect(['home/account/login', 'callback' => Url::current()]);
         }
-
         $data=AdminService::G()->getDataForHome();
         return $this->display('index', $data);
     }

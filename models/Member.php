@@ -206,5 +206,22 @@ class Member extends Model
 
         return $this;
     }
+    public function createMember($account_id)
+    {
+            $this->encode_id    = $this->createEncodeId();
+            $this->project_id   = 1;
+            $this->user_id      = $account_id;
+            $this->join_type    = $this::PASSIVE_JOIN_TYPE;
+            $this->project_rule = 'look,export,history';
+            $this->env_rule     = 'look,create,update,delete';
+            $this->module_rule  = 'look,create,update';
+            $this->api_rule     = 'look,create,update,export,debug,history';
+            $this->member_rule  = 'look,create,update';
+            $this->template_rule  = 'look,create,update';
+            $this->creater_id   = 1;
+            $this->created_at   = date('Y-m-d H:i:s');
+
+            return $this->save();
+    }
 
 }

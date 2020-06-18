@@ -5,13 +5,13 @@ use Yii;
 use yii\db\Exception;
 use app\models\Member;
 use app\models\Account;
-use app\models\loginLog\CreateLog;
+use app\models\LoginLog;
 
-class Installservice extends BaseService
+class InstallService extends BaseService
 {
     public function isInstalled()
     {
-        return file_exists(Yii::getAlias("@runtime") . '/install/install.lock');
+        return InstallLib::G()->isInstalled();
     }
     public function getAppVersion()
     {
@@ -107,51 +107,21 @@ class Installservice extends BaseService
 
             // 插入管理员
             $account = new Account();
-
-            $account->status = $account::ACTIVE_STATUS;
-            $account->type   = $account::ADMIN_TYPE;
-            $account->name   = $step3['name'];
-            $account->email  = $step3['email'];
-            $account->ip     = $account->getUserIp();
-            $account->location   = $account->getLocation();
-            $account->created_at = date('Y-m-d H:i:s');
-
-            $account->setPassword($step3['password']);
-            $account->generateAuthKey();
-
-            if(!$account->save()){
+            if(!$account->createAccount($step3['name'],$step3['email'],$step3['password'])){
                 $transaction->rollBack();
                 return ['status' => 'error', 'message' => $account->getErrorMessage(), 'label' => $account->getErrorLabel()];
             }
 
             // 默认加入测试项目
             $member = new Member();
-            $member->encode_id    = $member->createEncodeId();
-            $member->project_id   = 1;
-            $member->user_id      = $account->id;
-            $member->join_type    = $member::PASSIVE_JOIN_TYPE;
-            $member->project_rule = 'look,export,history';
-            $member->env_rule     = 'look,create,update,delete';
-            $member->module_rule  = 'look,create,update';
-            $member->api_rule     = 'look,create,update,export,debug,history';
-            $member->member_rule  = 'look,create,update';
-            $member->template_rule  = 'look,create,update';
-            $member->creater_id   = 1;
-            $member->created_at   = date('Y-m-d H:i:s');
-
-            if(!$member->save()){
+            if(!$member->createMember($account->id)){
                 $transaction->rollBack();
                 return ['status' => 'error', 'message' => $member->getErrorMessage(), 'label' => $member->getErrorLabel()];
             }
 
             // 记录日志
-            $loginLog = new CreateLog();
-
-            $loginLog->user_id    = $account->id;
-            $loginLog->user_name  = $account->name;
-            $loginLog->user_email = $account->email;
-
-            if(!$loginLog->store()){
+            $loginLog = new LoginLog();
+            if(!$loginLog->createLoginLog($account->id, $account->name, $account->email)){
                 $transaction->rollBack();
                 return ['status' => 'error', 'message' => $loginLog->getErrorMessage(), 'label' => $loginLog->getErrorLabel()];
             }

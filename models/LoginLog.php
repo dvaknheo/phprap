@@ -131,5 +131,18 @@ class LoginLog extends Model
 
         return $this;
     }
+    public function createLoginLog($id,$name,$email)
+    {
+        $this->user_id    = $id;
+        $this->user_name  = $name;
+        $this->user_email = $email;
+        
+        $this->ip         = $this->getUserIp();
+        $this->location   = $this->getLocation();
+        $this->browser    = $this->getBrowser();
+        $this->os         = $this->getOs();
+        $this->created_at = date('Y-m-d H:i:s');
 
+        return $this->save();
+    }
 }

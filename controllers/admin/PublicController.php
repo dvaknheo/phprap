@@ -5,7 +5,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
 use app\models\Apply;
-use app\models\Model;
+use app\services\InstallService;
 
 class PublicController extends Controller
 {
@@ -16,7 +16,7 @@ class PublicController extends Controller
     public function beforeAction($action)
     {
         if($this->beforeAction){
-            if(!$this->isInstalled()){
+            if(!InstallService::G()->isInstalled()){
                 return $this->redirect(['home/install/step1'])->send();
             }
 
@@ -50,9 +50,9 @@ class PublicController extends Controller
         $params['notify']  = $notify;
         $params['account'] = $account;
 
-        $params['installed_at'] = Model::findModel()->getInstallTime();
+        $params['installed_at'] = InstallService::G()->getInstallTime();
         ////[[[[
-        $my_view= $this->fetch_view_override($view);
+        $my_view = $this->fetch_view_override($view);
         if($my_view){
             exit($this->do_view_override($my_view, $params));
         }
@@ -63,9 +63,9 @@ class PublicController extends Controller
     {
         if(!defined('PHPRAP_CONSTS')){
             define('PHPRAP_CONSTS',true);
-        define('APP_VERSION',Yii::$app->params['app_version']);
-        define('STATIC_URL',Yii::getAlias("@web") . '/static');
-        define('STATIC_VERSION',Yii::$app->params['static_version']);
+            define('APP_VERSION',Yii::$app->params['app_version']);
+            define('STATIC_URL',Yii::getAlias("@web") . '/static');
+            define('STATIC_VERSION',Yii::$app->params['static_version']);
         }
     
         $__file=Yii::getAlias('@app').'/view/'.$view.'.php';
@@ -112,13 +112,5 @@ class PublicController extends Controller
         return $this->display('/home/public/message', ['flag' => 'error', 'message' => $message, 'time' => $jumpSeconds, 'url' => $jumpUrl]);
     }
 
-    /**
-     * 判断是否已经安装过
-     * @return bool
-     */
-    protected function isInstalled()
-    {
-        return file_exists(Yii::getAlias("@runtime") . '/install/install.lock');
-    }
 
 }

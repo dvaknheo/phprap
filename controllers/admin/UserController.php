@@ -1,7 +1,6 @@
 <?php
 namespace app\controllers\admin;
 
-use Yii;
 use app\helpers\ControllerHelper;
 use app\services\AdminService;
 

@@ -1,7 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
 use app\helpers\ControllerHelper;
 use app\services\TemplateService;
 

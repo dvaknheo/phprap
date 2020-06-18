@@ -3,7 +3,6 @@ namespace app\controllers\home;
 
 use Yii;
 use yii\helpers\Url;
-
 use app\helpers\ControllerHelper;
 use app\services\AccountService;
 
@@ -49,7 +48,7 @@ class AccountController extends PublicController
         }
 
         $config = AccountService::G()->getLoginInfo();
-        return $this->render('login', ['callback' => $request->get('callback', ''), 'config' => $config]);
+        return $this->render('login', ['callback' => Yii::$app->request->get('callback', ''), 'config' => $config]);
     }
 
     /**

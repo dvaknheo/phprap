@@ -1,9 +1,8 @@
 <?php
 namespace app\controllers\admin;
 
-use Yii;
 use app\services\AdminService;
-
+use app\helpers\ControllerHelper;
 class HistoryController extends PublicController
 {
     /**
@@ -13,7 +12,7 @@ class HistoryController extends PublicController
      */
     public function actionLogin()
     {
-        $model = AdminService::G()->getDataForLoginHistory(Yii::$app->request->queryParams);
+        $model = AdminService::G()->getDataForLoginHistory(ControllerHelper::REQUEST());
 
         return $this->display('login', ['model' => $model]);
     }

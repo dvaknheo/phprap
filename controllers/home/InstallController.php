@@ -1,9 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
-use yii\web\Response;
-
 use app\services\InstallService;
 use app\services\CacheService;
 use app\helpers\ControllerHelper;

@@ -1,7 +1,7 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
+use app\helpers\ControllerHelper;
 use app\serivces\HistoryService;
 
 class HistoryController extends PublicController
