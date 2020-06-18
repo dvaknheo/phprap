@@ -78,6 +78,7 @@ class AdminService extends BaseService
     }
     public function setUserProfile($id,$post)
     {
+        $this->setSuccessMessage('编辑成功');
         $model = ProfileForm::findModel($id);
         $flag = $model->load($post);
         BaseServiceException::AssertOn($flag,'加载数据失败','ProfileForm');
@@ -153,7 +154,7 @@ class AdminService extends BaseService
         
         $config->content  =  json_encode($data, JSON_UNESCAPED_UNICODE);
         $flag = $config->save();
-        BaseServiceException::AssertWithModel($flag,$model);
+        BaseServiceException::AssertWithModel($flag,$config);
     }
 
 

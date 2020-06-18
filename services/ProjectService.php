@@ -1,5 +1,5 @@
 <?php
-namespace app\controllers\home;
+namespace app\services;
 
 use Yii;
 

@@ -8,7 +8,7 @@ use yii\web\Response;
 
 class ControllerHelper
 {
-    protected static $ExtJsonData=[];
+    public static $ExtJsonData=[];
     
     public static function IsAjax()
     {
@@ -52,8 +52,63 @@ class ControllerHelper
             return Yii::$app->request->post();
         }
     }
-    public static function WrapExceptionOnce($object)
+    public static function WrapExceptionOnce($object,$successMessage=null)
     {
-        //TODO
+        $class=get_class($object);
+        $class::G((new Proxy())->setup($class,$object,$successMessage));
+    }
+}
+class Proxy
+{
+    public static function G($object = null)
+    {
+        if (defined('__SINGLETONEX_REPALACER')) {
+            $callback = __SINGLETONEX_REPALACER;
+            return ($callback)(static::class, $object);
+        }
+        if ($object) {
+            self::$_instances[static::class] = $object;
+            return $object;
+        }
+        $me = self::$_instances[static::class] ?? null;
+        if (null === $me) {
+            $me = new static();
+            self::$_instances[static::class] = $me;
+        }
+        
+        return $me;
+    }
+    protected $class;
+    protected $object;
+    protected $successMessage=null;
+    
+    public function setup($class,$object,$successMessage)
+    {
+        $this->class=$class;
+        $this->object=$object;
+        $this->object=$object;
+        
+        return $this;
+    }
+    public function __call($func,$args)
+    {
+        $request = Yii::$app->request;
+        if(!$request->isPost){
+            $this->class::G($this->object);
+            $this->object=null;
+            return null;
+        }
+        try{
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            ([$this->object,$func])(...$args);
+            $successMessage=$successMessage??$this->object->getSuccessMessage();
+            $this->class::G($this->object);
+            $this->object=null;
+            $ret = ['status' => 'success', 'message' => $successMessage];
+            return $ret;
+            
+        }catch(BaseServiceException $ex){
+            return $ex->returnArray();
+        }        
     }
 }

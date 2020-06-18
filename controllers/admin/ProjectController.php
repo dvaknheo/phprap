@@ -2,15 +2,8 @@
 namespace app\controllers\admin;
 
 use Yii;
-use yii\web\Response;
-
 use app\helpers\ControllerHelper;
-
 use app\services\AdminService;
-use app\models\Project;
-use app\models\project\DeleteProject;
-use app\models\project\RecoverProject;
-
 
 class ProjectController extends PublicController
 {
@@ -47,6 +40,9 @@ class ProjectController extends PublicController
         $ret = ControllerHelper::AjaxPost('删除成功',function($post) use ($id) {
             AdminService::G()->deleteProject($id,$post);
         });
+        //ControllerHelper::WrapExceptionOnce(AdminService::G(),'删除成功');
+        //$ret=AdminService::G()->deleteProject($id,$post);
+        //id=//$ret=AdminService::G()->deleteProject($id,$post);
         if($ret){
             return $ret;
         }

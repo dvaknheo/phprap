@@ -25,9 +25,9 @@ class UserController extends PublicController
      */
     public function actionProfile($id)
     {
-        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id){
-            AdminService::G()->setUserProfile($id,$post);
-        });
+        $post = Yii::$app->request->post();
+        ControllerHelper::WrapExceptionOnce(AdminService::G());
+        $ret=AdminService::G()->setUserProfile($id,$post);
         if($ret){
             return $ret;
         }
@@ -41,14 +41,13 @@ class UserController extends PublicController
      */
     public function actionPassword($id)
     {
-        $ret = ControllerHelper::AjaxPost('保存成功',function($post)use($id){
-            AdminService::G()->setUserPassword($id,$post);
-        });
+        $post = Yii::$app->request->post();
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
+        $ret = AdminService::G()->setUserPassword($id,$post);
         if($ret){
             return $ret;
         }
-        $model = AdminService::G()->setUserPassword($id);
+        $model = AdminService::G()->getUserPassword($id);
         return $this->display('password', ['user' => $model]);
     }
-
 }

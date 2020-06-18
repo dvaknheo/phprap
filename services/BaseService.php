@@ -27,7 +27,16 @@ class BaseService
         
         return $me;
     }
-    
+    protected $successMessage;
+    protected function setSuccessMessage($successMessage)
+    {
+        $this->successMessage = $successMessage;
+    }
+    public function getSuccessMessage()
+    {
+        return $this->successMessage;
+    }
+    //
     public function  doModel($model,$post)
     {
         if(!$model->load($post)){
