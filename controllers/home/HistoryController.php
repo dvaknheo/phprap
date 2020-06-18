@@ -13,8 +13,8 @@ class HistoryController extends PublicController
      */
     public function actionLogin()
     {
-        $params = Yii::$app->request->queryParams;
-        $user_id = Yii::$app->user->identity->id;
+        $params = ControllerHelper::REQUEST();
+        $user_id = SessionService::G()->getCurrentUid();
 
         $model = HistoryService::G()->searchLoginLog($user_id,$params);
 
@@ -27,8 +27,8 @@ class HistoryController extends PublicController
      */
     public function actionApply()
     {
-        $params = Yii::$app->request->queryParams;
-        $user_id = Yii::$app->user->identity->id;
+        $params = ControllerHelper::REQUEST();
+        $user_id = SessionService::G()->getCurrentUid();
 
         $model = HistoryService::G()->searchAppley($user_id,$params);
 

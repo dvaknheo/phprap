@@ -10,6 +10,10 @@ class ControllerHelper
 {
     public static $ExtJsonData=[];
     
+    public static function REQUEST()
+    {
+        return Yii::$app->request->queryParams;
+    }
     public static function IsAjax()
     {
         $request = Yii::$app->request;
@@ -23,6 +27,9 @@ class ControllerHelper
     public static function AjaxPostExtData($data)
     {
         static::$ExtJsonData = $data;
+        $ret = ['status' => 'success', 'message' =>''];
+        $ret = array_merge($ret, static::$ExtJsonData);
+        return $ret;
     }
     public static function AjaxPost($message,$callback)
     {
@@ -46,11 +53,7 @@ class ControllerHelper
     }
     public static function Post($key=null)
     {
-        if(isset($key)){
-            return Yii::$app->request->post($key);
-        }else{
-            return Yii::$app->request->post();
-        }
+        return Yii::$app->request->post($key);
     }
     public static function WrapExceptionOnce($object,$successMessage=null)
     {

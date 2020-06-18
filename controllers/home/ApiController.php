@@ -6,7 +6,6 @@ use Yii;
 use yii\helpers\Url;
 use app\helpers\ControllerHelper;
 use app\services\ApiService;
-use app\services\BaseServiceException;
 
 class ApiController extends PublicController
 {
@@ -19,11 +18,9 @@ class ApiController extends PublicController
      */
     public function actionDebug($id)
     {
-        $request = Yii::$app->request;
-
         /** @var Api $api */
         $ret = ControllerHelper::AjaxPost('',function($post)use($id) {
-            $data = ApiService::G()->debug($id,$post);
+            $data = ApiService::G()->debug($id, ControllerHelper::POST());
             ControllerHelper::AjaxPostExtData($data);
         });
         if($ret){
@@ -43,6 +40,7 @@ class ApiController extends PublicController
      */
     public function actionCreate($module_id)
     {
+        var_dump("BUG");
         $ret = ControllerHelper::AjaxPost('创建成功',function($post) {
             $encode_id = ApiService::G()->create($post);
             $callback = url('home/api/show', ['id' => $encode_id]);
@@ -63,6 +61,7 @@ class ApiController extends PublicController
      */
     public function actionUpdate($id)
     {
+        var_dump("BUG");
         $ret = ControllerHelper::AjaxPost('编辑成功',function($post) use($id) {
             $encode_id = ApiService::G()->update($module_id, $post);
             $callback = url('home/api/show', ['id' => $encode_id]);
@@ -93,7 +92,7 @@ class ApiController extends PublicController
             return $ret;
         }
 
-		$data = ApiService::G()->getDataForDelete($id);
+    $data = ApiService::G()->getDataForDelete($id);
         return $this->display('delete', $data);
     }
 
@@ -104,8 +103,8 @@ class ApiController extends PublicController
      */
     public function actionShow($id, $tab = 'home')
     {
-        $params = Yii::$app->request->queryParams;
-        $is_guest = Yii::$app->user->isGuest;
+        $params = ControllerHelper::REQUEST();
+        $is_guest = SessionService::G()->isGuest();
         $is_admin = Yii::$app->user->identity->isAdmin;
         try{
             $assign = ApiService::G()->show($id,$tab,$params,$is_guest,$is_admin);
@@ -136,7 +135,7 @@ class ApiController extends PublicController
         $account = Yii::$app->user->identity;
         $flag= ApiService::G()->cacheExportLockCheck($id,$account->id);
         if(!$flag){
-            $this->error("抱歉，导出太频繁，请{$remain_time}秒后再试!", 5);
+            $this->error("抱歉，导出太频繁，请{\$remain_time}秒后再试!", 5);
         }
         
         try{

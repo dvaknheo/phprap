@@ -18,16 +18,14 @@ class AccountController extends PublicController
      */
     public function actionRegister()
     {
-        $ret = ControllerHelper::AjaxPost('注册成功',function($post) {
-            AccountService::G()->regist($post);
+        $ret = ControllerHelper::AjaxPost('注册成功',function() {
+            AccountService::G()->regist(ControllerHelper::POST());
             ControllerHelper::AjaxPostExtData(['callback' => Url::toRoute(['project/select'])]);
         });
         if($ret){
             return $ret;
         }
-
         $config = AccountService::G()->getRegistInfo();
-
         return $this->display('register', ['config' => $config]);
     }
 
@@ -37,14 +35,12 @@ class AccountController extends PublicController
      */
     public function actionLogin()
     {
-        $request = Yii::$app->request;
-
         // 已登录用户直接挑转到项目选择页
-        if(!Yii::$app->user->isGuest){
+        if(!SessionService::G()->isGuest()){
             return $this->redirect(['home/project/select']);
         }
-        $ret = ControllerHelper::AjaxPost('登录成功',function($post) {
-            $callback = AccountService::G()->login($post);
+        $ret = ControllerHelper::AjaxPost('登录成功',function() {
+            $callback = AccountService::G()->login(ControllerHelper::POST());
             $callback = $callback ? $callback : Url::toRoute(['home/project/select']);
             ControllerHelper::AjaxPostExtData(['callback' => $callback]);
         });
@@ -53,8 +49,6 @@ class AccountController extends PublicController
         }
 
         $config = AccountService::G()->getLoginInfo();
-
-
         return $this->render('login', ['callback' => $request->get('callback', ''), 'config' => $config]);
     }
 
@@ -64,7 +58,7 @@ class AccountController extends PublicController
      */
     public function actionLogout()
     {
-        if (Yii::$app->user->isGuest || Yii::$app->user->logout()) {
+        if (SessionService::G()->isGuest() || Yii::$app->user->logout()) {
             return $this->redirect(['account/login']);
         }
     }
@@ -75,10 +69,9 @@ class AccountController extends PublicController
      */
     public function actionHome()
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
-
         return $this->display('home');
     }
 
@@ -88,17 +81,16 @@ class AccountController extends PublicController
      */
     public function actionProfile()
     {
-        if (Yii::$app->user->isGuest) {
+        if (SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
-        $user_id=Yii::$app->user->identity->id;
-        $ret = ControllerHelper::AjaxPost('修改成功',function($post) use($user_id) {
-            AccountService::G()->setProfile($user_id, $post);
-        });
+        $user_id=SessionService::G()->getCurrentUid();
+        
+        ControllerHelper::WrapExceptionOnce(AccountService::G(),'修改成功');
+        $ret = AccountService::G()->setProfile($user_id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
-
         return $this->display('profile');
     }
 
@@ -108,17 +100,16 @@ class AccountController extends PublicController
      */
     public function actionPassword()
     {
-        if (Yii::$app->user->isGuest) {
+        if (SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
-        $user_id=Yii::$app->user->identity->id;
-        $ret = ControllerHelper::AjaxPost('密码修改成功，请重新登录',function($post) use($user_id) {
-            AccountService::G()->setPassword($user_id, $post);
-        });
+        $user_id = SessionService::G()->getCurrentUid();
+        ControllerHelper::WrapExceptionOnce(AccountService::G(),'密码修改成功，请重新登录');
+
+        $ret = AccountService::G()->setPassword($user_id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
-
         return $this->display('password');
     }
 

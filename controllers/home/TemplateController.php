@@ -15,7 +15,7 @@ class TemplateController extends PublicController
     public function actionCreate($project_id)
     {
         $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
-            $id = TemplateService::G()->create($project_id,$post);
+            $id = TemplateService::G()->create($project_id, ControllerHelper::POST());
             $callback = url('home/project/show', ['id' => $id, 'tab' => 'template']);
             ControllerHelper::AjaxPostExtData(['callback' => $callback]);
         });
@@ -34,7 +34,7 @@ class TemplateController extends PublicController
     public function actionUpdate($id)
     {
         $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
-            $id = TemplateService::G()->update($id,$post);
+            $id = TemplateService::G()->update($id, ControllerHelper::POST());
             $callback = url('home/project/show', ['id' => $id, 'tab' => 'template']);
             ControllerHelper::AjaxPostExtData(['callback' => $callback]);
         });

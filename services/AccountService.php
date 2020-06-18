@@ -29,6 +29,8 @@ class AccountService extends BaseService
         $flag = $model->load($post);
         BaseServiceException::AssertOn($flag,'加载数据失败');
         $flag = $model->login();
+        
+        //Yii::$app->user->login($account, 60*60*$login_keep_time);
         BaseServiceException::AssertWithModel($flag,$model);
         
         return $model->callback;

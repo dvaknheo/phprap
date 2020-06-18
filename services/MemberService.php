@@ -1,7 +1,6 @@
 <?php
-namespace app\controllers\home;
+namespace app\services;
 
-use Yii;
 use app\models\Member;
 use app\models\Project;
 use app\models\member\CreateMember;
@@ -99,6 +98,6 @@ class MemberService extends BaseService
      */
     public function getDataForShow($id)
     {
-        $member = Member::findModel(['encode_id' => $id]);
+        return Member::findModel(['encode_id' => $id]);
     }
 }

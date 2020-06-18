@@ -13,7 +13,7 @@ class ApplyController extends PublicController
      */
     public function actionIndex()
     {
-        $params = Yii::$app->request->queryParams;
+        $params = ControllerHelper::REQUEST();
         $model = ApplyService::G()->search($params);
 
         return $this->display('index', ['apply' => $model]);
@@ -26,9 +26,8 @@ class ApplyController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $ret = ControllerHelper::AjaxPost('申请成功，请耐心等待项目创建人审核',function($post)use($project_id) {
-            ApplyService::G()->create($project_id);
-        });
+        ControllerHelper::WrapExceptionOnce(ApplyService::G(),'申请成功，请耐心等待项目创建人审核');
+        $ret =ApplyService::G()->create($project_id);
         if($ret){
             return $ret;
         }
@@ -43,10 +42,8 @@ class ApplyController extends PublicController
      */
     public function actionPass($id)
     {
-
-        $ret = ControllerHelper::AjaxPost('操作成功',function($post)use($id) {
-            ApplyService::G()->pass($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(ApplyService::G(),'操作成功');
+        $ret = ApplyService::G()->pass($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -63,9 +60,8 @@ class ApplyController extends PublicController
      */
     public function actionRefuse($id)
     {
-        $ret = ControllerHelper::AjaxPost('操作成功',function($post)use($id) {
-            ApplyService::G()->refuse($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(ApplyService::G(),'操作成功');
+        $ret = ApplyService::G()->refuse($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }

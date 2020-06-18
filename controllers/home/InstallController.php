@@ -10,6 +10,7 @@ use app\helpers\ControllerHelper;
 
 class InstallController extends PublicController
 {
+    //@override
     public function beforeAction($action)
     {
         if(InstallService::G()->isInstalled()){
@@ -64,8 +65,6 @@ class InstallController extends PublicController
      */
     public function actionStep3()
     {
-        $request = Yii::$app->request;
-
         if(CacheService::G()->installStep() != 2){
             return $this->redirect(['home/install/step2']);
         }

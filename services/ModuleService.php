@@ -1,8 +1,7 @@
 <?php
-namespace app\controllers\home;
+namespace app\services;
 
 use Yii;
-use yii\web\Response;
 use app\models\Project;
 use app\models\module\CreateModule;
 use app\models\module\UpdateModule;
@@ -50,7 +49,7 @@ class ModuleService extends BaseService
      * @param $id 模块ID
      * @return array|string
      */
-    public function actionDelete($id)
+    public function delete($id,$post)
     {
         $model  = DeleteModule::findModel(['encode_id' => $id]);
         

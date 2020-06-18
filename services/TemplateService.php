@@ -1,9 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
-use yii\helpers\Html;
-use yii\web\Response;
 use app\models\Project;
 use app\models\Field;
 use app\models\template\CreateTemplate;

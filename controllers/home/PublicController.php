@@ -42,7 +42,7 @@ class PublicController extends Controller
             return $this->error('抱歉，该IP不允许访问');
         }
 
-        if($this->checkLogin && Yii::$app->user->isGuest){
+        if($this->checkLogin && SessionService::G()->isGuest()){
             return $this->redirect(['home/account/login','callback' => Url::current()])->send();
         }
 
@@ -56,7 +56,7 @@ class PublicController extends Controller
      */
     public function display($view, $params = [])
     {
-        if(!Yii::$app->user->isGuest){
+        if(!SessionService::G()->isGuest()){
             $notify  = Apply::findModel()->search(['check_status' => Apply::CHECK_STATUS, 'order_by' => 'id desc']);
             $account = Yii::$app->user->identity;
 

@@ -13,7 +13,6 @@ class ImportController extends PublicController
     public function actionProject($id)
     {
         $project = ImportService::G()->project($id);
-
         return $this->display('project', ['project' => $project]);
     }
 
@@ -25,7 +24,6 @@ class ImportController extends PublicController
     public function actionApi($id)
     {
         $api = ImportService::G()->api($id);
-
         return $this->display('api', ['api' => $api]);
     }
 

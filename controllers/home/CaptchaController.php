@@ -1,7 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
 use yii\web\Controller;
 
 class CaptchaController extends Controller

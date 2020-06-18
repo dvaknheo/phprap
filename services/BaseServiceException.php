@@ -1,7 +1,6 @@
 <?php
 namespace app\services;
 
-use Yii;
 class BaseServiceException extends \Exception
 {
     protected $label;

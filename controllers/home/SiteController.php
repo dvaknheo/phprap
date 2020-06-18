@@ -1,8 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
-
 class SiteController extends PublicController
 {
     /**
@@ -13,5 +11,4 @@ class SiteController extends PublicController
     {
         return $this->redirect(['project/select']);
     }
-
 }

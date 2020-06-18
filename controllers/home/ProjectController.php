@@ -17,7 +17,7 @@ class ProjectController extends PublicController
      */
     public function actionSelect()
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
 
@@ -30,11 +30,11 @@ class ProjectController extends PublicController
      */
     public function actionSearch()
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login','callback' => Url::current()]);
         }
 
-        $params = Yii::$app->request->queryParams;
+        $params = ControllerHelper::REQUEST();
 
         $model = ProjectService::G()->search($params);
         return $this->display('search', ['project' => $model]);
@@ -46,9 +46,10 @@ class ProjectController extends PublicController
      */
     public function actionCreate()
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
+        ControllerHelper::WrapExceptionOnce(ProjectService::G(),'添加成功');
 
         $ret = ControllerHelper::AjaxPost('添加成功',function($post) {
             ProjectService::G()->create($post);
@@ -67,12 +68,13 @@ class ProjectController extends PublicController
      */
     public function actionUpdate($id)
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
+        ControllerHelper::WrapExceptionOnce(ProjectService::G(),'添加成功');
 
         $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
-            ProjectService::G()->update($id,$post);
+            ProjectService::G()->update($id, ControllerHelper::POST());
         });
         if($ret){
             return $ret;
@@ -89,8 +91,8 @@ class ProjectController extends PublicController
      */
     public function actionShow($id, $tab = 'home')
     {
-        $params = Yii::$app->request->queryParams;
-        $is_guest = Yii::$app->user->isGuest;
+        $params = ControllerHelper::REQUEST();
+        $is_guest = SessionService::G()->isGuest();
         $is_admin = Yii::$app->user->identity->isAdmin;
         
         try{
@@ -121,7 +123,7 @@ class ProjectController extends PublicController
      */
     public function actionMember($id, $name = null)
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
         
@@ -136,12 +138,12 @@ class ProjectController extends PublicController
      */
     public function actionTransfer($id)
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
 
         $ret = ControllerHelper::AjaxPost('转让成功',function($post)use($id) {
-            ProjectService::G()->transfer($id,$post);
+            ProjectService::G()->transfer($id, ControllerHelper::POST());
             ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
         });
         if($ret){
@@ -186,12 +188,12 @@ class ProjectController extends PublicController
      */
     public function actionDelete($id)
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
 
         $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
-            ProjectService::G()->delete($id,$post);
+            ProjectService::G()->delete($id, ControllerHelper::POST());
             ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
         });
         if($ret){
@@ -208,13 +210,13 @@ class ProjectController extends PublicController
      */
     public function actionQuit($id)
     {
-        if(Yii::$app->user->isGuest) {
+        if(SessionService::G()->isGuest()) {
             return $this->redirect(['home/account/login']);
         }
-        $user_id = Yii::$app->user->identity->id;
+        $user_id = SessionService::G()->getCurrentUid();
         
-        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
-            ProjectService::G()->quit($id,$post);
+        $ret = ControllerHelper::AjaxPost('退出成功',function($post)use($id) {
+            ProjectService::G()->quit($id, ControllerHelper::POST());
             ControllerHelper::AjaxPostExtData(['callback' => url('home/project/select')]);
         });
         if($ret){

@@ -13,7 +13,7 @@ class ProjectController extends PublicController
      */
     public function actionIndex()
     {
-        $params = Yii::$app->request->queryParams;
+        $params = ControllerHelper::REQUEST();
         $model = AdminService::G()->searchProject($params);
         return $this->display('index', ['project' => $model]);
     }
@@ -25,7 +25,7 @@ class ProjectController extends PublicController
      */
     public function actionRecycle()
     {
-        $params = Yii::$app->request->queryParams;
+        $params = ControllerHelper::REQUEST();
         $model = AdminService::G()->searchProjectRecycled($params);
         return $this->display('recycle', ['project' => $model]);
     }
@@ -37,12 +37,8 @@ class ProjectController extends PublicController
      */
     public function actionDelete($id)
     {
-        $ret = ControllerHelper::AjaxPost('删除成功',function($post) use ($id) {
-            AdminService::G()->deleteProject($id,$post);
-        });
-        //ControllerHelper::WrapExceptionOnce(AdminService::G(),'删除成功');
-        //$ret=AdminService::G()->deleteProject($id,$post);
-        //id=//$ret=AdminService::G()->deleteProject($id,$post);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'删除成功');
+        $ret = AdminService::G()->deleteProject($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -57,9 +53,8 @@ class ProjectController extends PublicController
      */
     public function actionRecover($id)
     {
-        $ret = ControllerHelper::AjaxPost('恢复成功',function($post) use ($id) {
-            AdminService::G()->recoverProject($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'恢复成功');
+        $ret = AdminService::G()->recoverProject($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }

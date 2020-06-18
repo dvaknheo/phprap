@@ -1,7 +1,6 @@
 <?php
 namespace app\controllers\home;
 
-use Yii;
 use app\helpers\ControllerHelper;
 use app\services\ModuleService;
 
@@ -14,9 +13,8 @@ class ModuleController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
-            ModuleService::G()->create($project_id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(ModuleService::G(),'添加成功');
+        $ret = ModuleService::G()->create($project_id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -30,9 +28,8 @@ class ModuleController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
-            ModuleService::G()->update($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(ModuleService::G(),'编辑成功');
+        $ret = ModuleService::G()->update($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -47,9 +44,8 @@ class ModuleController extends PublicController
      */
     public function actionDelete($id)
     {
-        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
-            ModuleService::G()->delete($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(ModuleService::G(),'删除成功');
+        $ret = ModuleService::G()->delete($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }

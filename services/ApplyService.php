@@ -2,7 +2,6 @@
 namespace app\services;
 
 use Yii;
-use yii\web\Response;
 use app\models\Project;
 use app\models\Apply;
 use app\models\apply\CreateApply;
@@ -76,6 +75,8 @@ class ApplyService extends BaseService
     }
     public function refuse($id,$post)
     {
+        $model   = UpdateApply::findModel($id);
+
         $flag = $model->load($post);
         BaseServiceException::AssertOn($flag,'加载数据失败','UpdateApply');
 

@@ -14,10 +14,8 @@ class MemberController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        //
-        $ret = ControllerHelper::AjaxPost('添加成功',function($post)use($project_id) {
-            MemberService::G()->create($project_id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(MemberService::G(),'添加成功');
+        $ret = MemberService::G()->create($project_id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -32,9 +30,8 @@ class MemberController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
-            MemberService::G()->update($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(MemberService::G(),'编辑成功');
+        $ret = MemberService::G()->update($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -61,9 +58,8 @@ class MemberController extends PublicController
      */
     public function actionRemove($id)
     {
-        $ret = ControllerHelper::AjaxPost('移出成功',function($post)use($id) {
-            MemberService::G()->remove($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(MemberService::G(),'移出成功');
+        $ret = MemberService::G()->remove($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }

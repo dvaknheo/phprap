@@ -16,15 +16,6 @@ use Curl\Curl;
 
 class ApiService extends BaseService
 {
-    public function XX($post)
-    {
-        $model = new XX();
-        
-        $flag = $model->load($post);
-        BaseServiceException::AssertOn($flag,'加载数据失败');
-        $flag = $model->store();
-        BaseServiceException::AssertWithModel($flag,$model);
-    }
     public function getDebugInfo($id)
     {
         $api = Api::findModel(['encode_id' => $id]);

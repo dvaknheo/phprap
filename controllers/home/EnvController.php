@@ -14,9 +14,8 @@ class EnvController extends PublicController
      */
     public function actionCreate($project_id)
     {
-        $ret = ControllerHelper::AjaxPost('创建成功',function($post)use($project_id) {
-            EnvService::G()->create($project_id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(EnvService::G(),'创建成功');
+        $ret = EnvService::G()->create($project_id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -31,10 +30,8 @@ class EnvController extends PublicController
      */
     public function actionUpdate($id)
     {
-        $request = Yii::$app->request;
-        $ret = ControllerHelper::AjaxPost('编辑成功',function($post)use($id) {
-            EnvService::G()->update($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(EnvService::G(),'编辑成功');
+        $ret = EnvService::G()->update($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -50,9 +47,8 @@ class EnvController extends PublicController
      */
     public function actionDelete($id)
     {
-        $ret = ControllerHelper::AjaxPost('删除成功',function($post)use($id) {
-            EnvService::G()->delete($id,$post);
-        });
+        ControllerHelper::WrapExceptionOnce(EnvService::G(),'删除成功');
+        $ret = EnvService::G()->delete($id, ControllerHelper::POST());
         if($ret){
             return $ret;
         }

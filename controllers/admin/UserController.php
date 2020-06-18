@@ -13,7 +13,7 @@ class UserController extends PublicController
      */
     public function actionIndex()
     {
-        $params = Yii::$app->request->queryParams;
+        $params = ControllerHelper::REQUEST();
         $model = AdminService::G()->searchUser($params);
 
         return $this->display('index', ['user' => $model]);
@@ -25,9 +25,8 @@ class UserController extends PublicController
      */
     public function actionProfile($id)
     {
-        $post = Yii::$app->request->post();
         ControllerHelper::WrapExceptionOnce(AdminService::G());
-        $ret=AdminService::G()->setUserProfile($id,$post);
+        $ret=AdminService::G()->setUserProfile($id,ControllerHelper::Post());
         if($ret){
             return $ret;
         }
@@ -41,9 +40,8 @@ class UserController extends PublicController
      */
     public function actionPassword($id)
     {
-        $post = Yii::$app->request->post();
         ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
-        $ret = AdminService::G()->setUserPassword($id,$post);
+        $ret = AdminService::G()->setUserPassword($id,ControllerHelper::Post());
         if($ret){
             return $ret;
         }

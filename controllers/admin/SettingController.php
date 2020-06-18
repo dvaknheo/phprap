@@ -17,9 +17,8 @@ class SettingController extends PublicController
      */
     public function actionApp()
     {
-        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
-            AdminService::G()->setSettingApp($post);
-        });
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
+        $ret = AdminService::G()->setSettingApp(ControllerHelper::POST());
         if($ret){
             return $ret;
         }
@@ -33,13 +32,12 @@ class SettingController extends PublicController
      */
     public function actionEmail()
     {
-        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
-           $config = AdminService::G()->setSettingEmail($post);
-        });
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
+        $ret = AdminService::G()->setSettingEmail(ControllerHelper::POST());
         if($ret){
             return $ret;
         }
-        $config = AdminService::G()->setSettingEmail();
+        $config = AdminService::G()->getSettingEmail();
         return $this->display('email', ['config' => $config]);
     }
 
@@ -49,9 +47,8 @@ class SettingController extends PublicController
      */
     public function actionSafe()
     {
-        $ret = ControllerHelper::AjaxPost('保存成功',function($post){
-            AdminService::G()->setSettingSafe($post);
-        });
+        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
+        $ret = AdminService::G()->setSettingSafe($post);
         if($ret){
             return $ret;
         }
