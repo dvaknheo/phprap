@@ -94,4 +94,16 @@ if (!function_exists('rand_id')) {
 }
 
 
+if (!function_exists('include_view')) {
+    function include_view($info)
+    {
+        $view=$info['name'];
+        $__file=Yii::getAlias('@app').'/view/'.$view.'.php';
+        unset($view);
+        extract($info);
+        
+        include $__file;
+    }
+};
+
 

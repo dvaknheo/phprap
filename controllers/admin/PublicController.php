@@ -51,8 +51,35 @@ class PublicController extends Controller
         $params['account'] = $account;
 
         $params['installed_at'] = Model::findModel()->getInstallTime();
-
+        ////[[[[
+        $my_view= $this->fetch_view_override($view);
+        if($my_view){
+            exit($this->do_view_override($my_view, $params));
+        }
+        ////]]]]
         exit($this->render($view . '.html', $params));
+    }
+    protected function do_view_override($view,$params)
+    {
+        if(!defined('PHPRAP_CONSTS')){
+            define('PHPRAP_CONSTS',true);
+        define('APP_VERSION',Yii::$app->params['app_version']);
+        define('STATIC_URL',Yii::getAlias("@web") . '/static');
+        define('STATIC_VERSION',Yii::$app->params['static_version']);
+        }
+    
+        $__file=Yii::getAlias('@app').'/view/'.$view.'.php';
+        unset($view);
+        extract($params);
+        include $__file;
+    }
+    protected function fetch_view_override($view)
+    {
+        $path_module=Yii::$app->controller->module->getViewPath();
+        $path_view=$this->getViewPath();
+        $my_view=substr($path_view,strlen($path_module)+1).DIRECTORY_SEPARATOR . $view;
+        $file=Yii::getAlias('@app').'/view/'.$my_view.'.php';
+        return is_file($file)?$my_view:'';
     }
 
     /**
@@ -64,6 +91,8 @@ class PublicController extends Controller
      */
     public function success($message, $jumpSeconds = 1, $jumpUrl = '', $model = null)
     {
+        //未使用。
+        
         $jumpUrl = $jumpUrl ? Url::toRoute($jumpUrl) : \Yii::$app->request->referrer;
 
         return $this->display('/home/public/message', ['flag' => 'success', 'message' => $message, 'time' => $jumpSeconds, 'url' => $jumpUrl, 'model' => $model]);
