@@ -5,7 +5,7 @@ use Yii;
 use yii\helpers\Url;
 use app\helpers\ControllerHelper;
 use app\services\AccountService;
-
+use app\services\SessionService;
 
 class AccountController extends PublicController
 {

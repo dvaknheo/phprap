@@ -4,7 +4,6 @@ namespace app\services;
 use Yii;
 use yii\helpers\Html;
 
-use app\models\Tongji;
 use app\models\LoginLog;
 use app\models\Project;
 use app\models\project\DeleteProject;
@@ -14,6 +13,8 @@ use app\models\Account;
 use app\models\account\PasswordForm;
 use app\models\account\ProfileForm;
 use app\models\Config;
+use app\models\Module;
+use app\models\Api;
 
 class AdminService extends BaseService
 {
@@ -26,7 +27,7 @@ class AdminService extends BaseService
         $system['php_version']   = PHP_VERSION;
         $system['mysql_version'] = Yii::$app->db->createCommand('select version()')->queryScalar();
         
-        $tongji = new Tongji;
+        $tongji = $this->getTongjiInfo();
         
         return ['system' => array2object($system), 'tongji' => $tongji];
     }
@@ -174,6 +175,124 @@ class AdminService extends BaseService
         }
 
         return json_encode($array, JSON_UNESCAPED_UNICODE);
+    }
+    protected function getTongjiInfo()
+    {
+        $ret = new \stdClass();
+        $ret->countTotalAccount = $this->getTotalAccount(null, 10)->count;
+        $ret->countTodayAccount = $this->getTotalAccount(null, 10)->count;
+        $ret->countTodayProject = $this->getTotalProject(10)->count;
+        $ret->countTodayProject = $this->getTodayProject(10)->count;
+        
+        $ret->countTodayModule = $this->getTotalModule(10)->count;
+        $ret->countTodayModule = $this->getTodayModule(10)->count;
+        
+        $ret->countTodayApi = $this->getTotalApi(10)->count;
+        $ret->countTodayApi = $this->getTodayApi(10)->count;
+
+        $ret->countTotalAccountEnabled = $this->getTotalAccount(10,10)->count;
+        $ret->countTotalAccountDisabled = $this->getTotalAccount(20,10)->count;
+        
+        $ret->countTotalProjectEnabled = $this->getTotalProject(10)->count;
+        $ret->countTotalProjectDisabled = $this->getTotalProject(30)->count;
+
+        
+        return $ret;
+//*/
+    }
+    /**
+     * 获取全部会员
+     * @return Account|null
+     */
+    private function getTotalAccount($status = null, $type = null)
+    {
+        return Account::findModel()->search(['status' => $status, 'type' => $type]);
+    }
+
+    /**
+     * 获取当天新增会员
+     * @return Account|null
+     */
+    private function getTodayAccount($status = null, $type = null)
+    {
+        return Account::findModel()->search([
+            'type'       => $type,
+            'status'     => $status,
+            'start_date' => date('Y-m-d'),
+            'end_date'   => date('Y-m-d'),
+        ]);
+    }
+
+    /**
+     * 获取全部项目
+     * @param null $type
+     * @return Project|null
+     * @throws \Exception
+     */
+    private function getTotalProject($status = null, $type = null)
+    {
+        return Project::findModel()->search(['type' => $type, 'status' => $status]);
+    }
+
+    /**
+     * 获取当天新增项目
+     * @param null $type
+     * @return Project|null
+     * @throws \Exception
+     */
+    private function getTodayProject($status = null, $type = null)
+    {
+        return Project::findModel()->search([
+            'type'       => $type,
+            'status'     => $status,
+            'start_date' => date('Y-m-d'),
+            'end_date'   => date('Y-m-d'),
+        ]);
+    }
+
+    /**
+     * 获取全部模块
+     * @return mixed
+     */
+    private function getTotalModule($status = null)
+    {
+        return Module::findModel()->search(['status' => $status]);
+    }
+
+    /**
+     * 获取当天新增模块
+     * @return Project|null
+     * @throws \Exception
+     */
+    private function getTodayModule($status = null)
+    {
+        return Module::findModel()->search([
+            'status'     => $status,
+            'start_date' => date('Y-m-d'),
+            'end_date'   => date('Y-m-d'),
+        ]);
+    }
+
+    /**
+     * 获取全部接口
+     * @return mixed
+     */
+    private function getTotalApi($status = null)
+    {
+        return Api::findModel()->search(['status' => $status]);
+    }
+
+    /**
+     * 获取当天新增接口
+     * @return mixed
+     */
+    private function getTodayApi($status = null)
+    {
+        return Api::findModel()->search([
+            'status'     => $status,
+            'start_date' => date('Y-m-d'),
+            'end_date'   => date('Y-m-d'),
+        ]);
     }
 }
 

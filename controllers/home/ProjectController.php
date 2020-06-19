@@ -5,6 +5,7 @@ use Yii;
 use yii\helpers\Url;
 use app\helpers\ControllerHelper;
 use app\services\ProjectService;
+use app\services\SessionService;
 
 
 class ProjectController extends PublicController

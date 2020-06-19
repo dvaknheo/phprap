@@ -56,6 +56,7 @@
 
                                     <button type="submit" class="btn btn-primary">搜索</button>
                                 </div>
+                                <div><?=$project->sql?></div>
                             </div>
 
 

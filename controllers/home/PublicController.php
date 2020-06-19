@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use app\models\Apply;
 use app\models\Config;
+use app\services\SessionService;
 
 class PublicController extends Controller
 {

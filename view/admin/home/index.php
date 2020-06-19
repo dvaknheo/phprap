@@ -46,8 +46,8 @@
                                 <div>用户</div>
                             </div>
                             <div class="col-xs-8">
-                                <div class="huge"><?=$tongji->getTotalAccount(null, 10)->count?></div>
-                                <div>今日新增 <?=$tongji->getTodayAccount(null, 10)->count?></div>
+                                <div class="huge"><?=$tongji->countTotalAccount?></div>
+                                <div>今日新增 <?=$tongji->countTodayAccount?></div>
                             </div>
                         </div>
                     </div>
@@ -63,8 +63,8 @@
                                 <div>项目</div>
                             </div>
                             <div class="col-xs-8">
-                                <div class="huge"><?=$tongji->getTotalProject(10)->count?></div>
-                                <div>今日新增 <?=$tongji->getTodayProject(10)->count?></div>
+                                <div class="huge"><?=$tongji->countTotalProject?></div>
+                                <div>今日新增 <?=$tongji->countTodayProject?></div>
                             </div>
                         </div>
                     </div>
@@ -80,8 +80,8 @@
                                 <div>模块</div>
                             </div>
                             <div class="col-xs-8">
-                                <div class="huge"><?=$tongji->getTotalModule(10)->count?></div>
-                                <div>今日新增 <?=$tongji->getTodayModule(10)->count?></div>
+                                <div class="huge"><?=$tongji->countTotalModule?></div>
+                                <div>今日新增 <?=$tongji->countTodayModule?></div>
                             </div>
                         </div>
                     </div>
@@ -97,8 +97,8 @@
                                 <div>接口</div>
                             </div>
                             <div class="col-xs-8">
-                                <div class="huge"><?=$tongji->getTotalApi(10)->count?></div>
-                                <div>今日新增 <?=$tongji->getTodayApi(10)->count?></div>
+                                <div class="huge"><?=$tongji->countTotalApi?></div>
+                                <div>今日新增 <?=$tongji->countTodayApi?></div>
                             </div>
                         </div>
                     </div>
@@ -221,8 +221,8 @@
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
-                        {value:<?=$tongji->getTotalAccount(10, 10)->count?>, name:'有效用户'},
-                        {value:<?=$tongji->getTotalAccount(20, 10)->count?>, name:'禁用用户'},
+                        {value:<?=$tongji->countTotalAccountEnabled?>, name:'有效用户'},
+                        {value:<?=$tongji->countTotalAccountDisabled?>, name:'禁用用户'},
                     ],
                     itemStyle: {
                         emphasis: {
@@ -260,8 +260,8 @@
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
-                        {value:<?=$tongji->getTotalProject(10)->count?>, name:'有效项目'},
-                        {value:<?=$tongji->getTotalProject(30)->count?>, name:'删除项目'},
+                        {value:<?=$tongji->countTotalProjectEnabled?>, name:'有效项目'},
+                        {value:<?=$tongji->countTotalProjectDisabled?>, name:'删除项目'},
                     ],
                     itemStyle: {
                         emphasis: {

@@ -13,6 +13,10 @@ class InstallService extends BaseService
     {
         return InstallLib::G()->isInstalled();
     }
+    public function getInstallTime()
+    {
+        return InstallLib::G()->getInstallTime();
+    }
     public function getAppVersion()
     {
         return Yii::$app->params['app_version'];

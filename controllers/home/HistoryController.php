@@ -2,7 +2,8 @@
 namespace app\controllers\home;
 
 use app\helpers\ControllerHelper;
-use app\serivces\HistoryService;
+use app\services\HistoryService;
+use app\services\SessionService;
 
 class HistoryController extends PublicController
 {
