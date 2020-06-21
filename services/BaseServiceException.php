@@ -31,7 +31,7 @@ class BaseServiceException extends \Exception
         $this->label = $label;
         return  $this;
     }
-    public function setModel(string $model,$trim = true)
+    public function setModel(?string $model,$trim = true)
     {
         $this->model=$mode;
         return $this;

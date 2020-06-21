@@ -56,7 +56,6 @@
 
                                     <button type="submit" class="btn btn-primary">搜索</button>
                                 </div>
-                                <div><?=$project->sql?></div>
                             </div>
 
 
@@ -86,15 +85,15 @@
                                     <th width="60px">模块数</th>
                                     <th width="60px">接口数</th>
                                     <th class="datetime">创建时间</th>
-                                    <?php if( $project->count){?>
+                                    <?php if($project->count){?>
                                     <th width="150px"></th>
                                     <?php }?>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach( $project->models as $model){?>
+                                <?php foreach($project->models as $model){?>
 
-                                <tr <?php if( $model->status != $model::ACTIVE_STATUS){?>class="danger"<?php }?>>
+                                <tr <?php if($model->status != $model::ACTIVE_STATUS){?>class="danger"<?php }?>>
                                     <td ><?=$model->title?></td>
                                     <td ><?=$model->typeLabel?></td>
 
@@ -104,7 +103,7 @@
                                     <td class="text-center"><?=$model->getApis()->count()?></td>
 
                                     <td ><?=$model->created_at?></td>
-                                    <?php if( $project->count){?>
+                                    <?php if($project->count){?>
                                     <td >
                                         <a type="button" class="btn btn-danger btn-xs hidden-xs mr-1" data-modal="#js_popModal" data-height="200" data-src="<?=url('admin/project/delete', ['id' => $model->encode_id])?>" data-toggle="tooltip" data-placement="bottom" data-title="删除项目">删除</a>
                                         <a class="btn btn-success btn-xs mr-1" target="_blank" data-toggle="tooltip" data-placement="bottom" data-title="查看项目" href="<?=url('home/project/show', ['id' => $model->encode_id])?>">查看</a>

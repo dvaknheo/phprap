@@ -4,9 +4,18 @@ namespace app\controllers\admin;
 use yii\helpers\Url;
 use app\services\AdminService;
 use app\services\SessionService;
+use app\services\BaseServiceException;
 
 class HomeController extends PublicController
 {
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
     /**
      * 后台主页
      * @return string|\yii\web\Response
@@ -19,5 +28,18 @@ class HomeController extends PublicController
         }
         $data=AdminService::G()->getDataForHome();
         return $this->display('index', $data);
+    }
+    public function actionTest()
+    {
+        BaseServiceException::AssertOn(false,"aaaaaaaaaaaaa","zz");
+        //var_dump("11111111111");
+        
+    }
+    public function actionError()
+    {
+        echo  "!!!!!!!!!!";
+        $exception = Yii::$app->errorHandler->exception;
+        var_dump($exception);
+        
     }
 }
