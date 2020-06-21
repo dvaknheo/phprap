@@ -36,7 +36,7 @@
 
 <script>
 $(function () {
-    <?php if( $account->id && config('app.is_push')){?>
+    <?php if($account->id && config('app.is_push')){?>
 
     var url  = "<?=url('home/apply/notify')?>";
     var time = "<?=config('app.push_time')?>";

@@ -28,7 +28,7 @@
 
         <li class="dropdown js_notifyDropdown">
             <a class="dropdown-toggle" href="<?=url('home/apply/index')?>">
-                <i class="fa fa-bell fa-fw"></i>(<span id="notify-count"><?=$notify->count ?? 0 ?></span>)
+                <i class="fa fa-bell fa-fw"></i>(<span id="notify-count"><?=$notify->count??0?></span>)
             </a>
         </li>
 
@@ -43,7 +43,7 @@
                 <?php if($account->id){?>
                 <li><a href="<?=url('home/account/home')?>"><i class="fa fa-user fa-fw"></i> 个人主页</a></li>
                 <li><a href="javascript:;" data-modal="#js_popModal" data-height="280" data-title='修改密码' data-src="<?=url('home/account/password')?>"><i class="fa fa-key fa-fw"></i> 修改密码</a></li>
-                <?php }else{ ?>
+                <?php }else{?>
                 <li><a href="<?=url('home/account/register')?>"><i class="fa fa-user fa-fw"></i> 用户注册</a></li>
                 <li><a href="<?=url('home/account/login', ['callback' => url('')])?>"><i class="fa fa-sign-in fa-fw"></i> 用户登录</a></li>
                 <?php }?>
@@ -64,5 +64,5 @@
         </li>
 
     </ul>
-    <?php if(isset($sidebar)){?> <?php include_view(['name'=>$sidebar])?> <?php }?>
+    <?php if(isset($sidebar)){?> <?php include_view(['name'=>$sidebar])?>"?> <?php }?>
 </nav>

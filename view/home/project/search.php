@@ -1,4 +1,4 @@
-<?php include_view(['name'=>'home/public/header','title'=>'项目管理'])?>
+<?php include_view(['name'=>'home/public/header','title'=>'搜索项目'])?>
 
 </head>
 
@@ -7,18 +7,21 @@
 <div id="wrapper">
 
     <!-- Navigation -->
-    <?php include_view(['name'=>'home/public/nav','sidebar'=>'admin/public/sidebar','active'=>'project'])?>
+    <?php include_view(['name'=>'home/public/nav','sidebar'=>'home/account/sidebar','active'=>'search'])?>
     <div id="page-wrapper">
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">项目管理
-                    <small>(<?=$project->count?>)</small>
+                <h1 class="page-header">
+                    搜索项目<small>(<?=$project->count?>)</small>
                 </h1>
-
+                <div class="alert alert-dismissable alert-warning">
+                    <i class="fa fa-fw fa-info-circle"></i>&nbsp;
+                    只有公开项目才能被搜索到，私有项目无法被搜索到
+                </div>
                 <div class="search">
                     <div class="row">
-                        <form action="<?=url()?>" method="get" autocomplete="off">
+                        <form action="" method="get" autocomplete="off">
 
                             <div class="col-sm-4">
 
@@ -37,21 +40,6 @@
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <select class="form-control" name="type">
-                                        <option disabled="" selected="" style="display:none;">项目类型</option>
-                                        <option value="">不限</option>
-                                        <?php foreach($project->typeLabels as $k => $v){?>
-                                        <option value="<?=$k?>" <?php if($project->params->type == $k){?>selected<?php }?>><?=$v?></option>
-                                        <?php }?>
-                                    </select>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-12">
-
-                                <div class="form-group">
                                     <button type="reset" class="btn btn-warning mr-1">重置</button>
 
                                     <button type="submit" class="btn btn-primary">搜索</button>
@@ -63,7 +51,6 @@
 
                     </div>
                 </div>
-
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -71,7 +58,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <?php include_view(['name'=>'admin/project/tab','active'=>'index'])?>
+
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -79,35 +66,37 @@
                                 <thead>
                                 <tr>
                                     <th>项目名称</th>
-                                    <th width="80px">项目类型</th>
+                                    <th>我的角色</th>
                                     <th>创建人昵称/账号</th>
                                     <th width="60px">成员数</th>
-                                    <th width="60px">模块数</th>
-                                    <th width="60px">接口数</th>
                                     <th class="datetime">创建时间</th>
+                                    <th class="datetime">更新时间</th>
                                     <?php if($project->count){?>
-                                    <th width="150px"></th>
+                                    <th width="95px"></th>
                                     <?php }?>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php foreach($project->models as $model){?>
-
-                                <tr <?php if($model->status != $model::ACTIVE_STATUS){?>class="danger"<?php }?>>
-                                    <td ><?=$model->title?></td>
-                                    <td ><?=$model->typeLabel?></td>
-
+                                <tr>
+                                    <td >
+                                        <?=$model->title?>
+                                    </td>
+                                    <td >
+                                        <?=$model->role?>
+                                    </td>
                                     <td ><?=$model->creater->fullName?></td>
-                                    <td class="text-center"><a href="<?=url('admin/user/index', ['project_id' => $model->encode_id])?>" data-toggle="tooltip" title="" data-original-title="点击查看成员"><?=$model->getMembers()->count()?></a></td>
-                                    <td class="text-center"><?=$model->getModules()->count()?></td>
-                                    <td class="text-center"><?=$model->getApis()->count()?></td>
-
+                                    <td class="text-center"><?=$model->getMembers()->count()?></td>
                                     <td ><?=$model->created_at?></td>
+                                    <td ><?=$model->updated_at?></td>
                                     <?php if($project->count){?>
                                     <td >
-                                        <a type="button" class="btn btn-danger btn-xs hidden-xs mr-1" data-modal="#js_popModal" data-height="200" data-src="<?=url('admin/project/delete', ['id' => $model->encode_id])?>" data-toggle="tooltip" data-placement="bottom" data-title="删除项目">删除</a>
-                                        <a class="btn btn-success btn-xs mr-1" target="_blank" data-toggle="tooltip" data-placement="bottom" data-title="查看项目" href="<?=url('home/project/show', ['id' => $model->encode_id])?>">查看</a>
-                                        <a class="btn btn-info btn-xs" target="_blank" data-toggle="tooltip" data-placement="bottom" data-title="项目动态" href="<?=url('home/project/show', ['id' => $model->encode_id, 'tab' => 'history'])?>">动态</a>
+                                        <?php if($model->isCreater() || $model->isJoiner()){?>
+                                        <a class="btn btn-success btn-xs disabled mr-1">加入</a>
+                                        <?=else?>
+                                        <a href="javascript:;" class="btn btn-success btn-xs mr-1" data-toggle="tooltip" data-placement="bottom" data-modal="#js_popModal" data-height="140" data-title="加入项目"  data-src="<?=url('home/apply/create', ['project_id' => $model->encode_id])?>">加入</a>
+                                        <?php }?>
+                                        <a target="_blank" href="<?=$model->url?>" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" data-title="查看项目">查看</a>
                                     </td>
                                     <?php }?>
                                 </tr>
@@ -117,6 +106,7 @@
                             </table>
                         </div>
                         <?=$project->pages?>
+
                         <!-- /.table-responsive -->
                     </div>
                     <!-- /.panel-body -->
@@ -130,5 +120,6 @@
 
     </div>
     <!-- /#wrapper -->
+    <?php include_view(['name'=>'home/public/copyright'])?>
 
-    <?php include_view(['name'=>'admin/public/footer'])?>
+    <?php include_view(['name'=>'home/public/footer'])?>

@@ -1,4 +1,4 @@
-<?php include_view(['name'=>'home/public/header','title'=>'项目管理'])?>
+<?php include_view(['name'=>'home/public/header','title'=>'回收站'])?>
 
 </head>
 
@@ -12,7 +12,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">项目管理
+                <h1 class="page-header">回收站
                     <small>(<?=$project->count?>)</small>
                 </h1>
 
@@ -71,7 +71,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <?php include_view(['name'=>'admin/project/tab','active'=>'index'])?>
+                    <?php include_view(['name'=>'admin/project/tab','active'=>'recycle'])?>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -84,7 +84,7 @@
                                     <th width="60px">成员数</th>
                                     <th width="60px">模块数</th>
                                     <th width="60px">接口数</th>
-                                    <th class="datetime">创建时间</th>
+                                    <th class="datetime">删除时间</th>
                                     <?php if($project->count){?>
                                     <th width="150px"></th>
                                     <?php }?>
@@ -93,7 +93,7 @@
                                 <tbody>
                                 <?php foreach($project->models as $model){?>
 
-                                <tr <?php if($model->status != $model::ACTIVE_STATUS){?>class="danger"<?php }?>>
+                                <tr>
                                     <td ><?=$model->title?></td>
                                     <td ><?=$model->typeLabel?></td>
 
@@ -102,11 +102,11 @@
                                     <td class="text-center"><?=$model->getModules()->count()?></td>
                                     <td class="text-center"><?=$model->getApis()->count()?></td>
 
-                                    <td ><?=$model->created_at?></td>
+                                    <td ><?=$model->updated_at?></td>
                                     <?php if($project->count){?>
                                     <td >
-                                        <a type="button" class="btn btn-danger btn-xs hidden-xs mr-1" data-modal="#js_popModal" data-height="200" data-src="<?=url('admin/project/delete', ['id' => $model->encode_id])?>" data-toggle="tooltip" data-placement="bottom" data-title="删除项目">删除</a>
-                                        <a class="btn btn-success btn-xs mr-1" target="_blank" data-toggle="tooltip" data-placement="bottom" data-title="查看项目" href="<?=url('home/project/show', ['id' => $model->encode_id])?>">查看</a>
+                                        <a type="button" class="btn btn-warning btn-xs hidden-xs mr-1" data-modal="#js_popModal" data-height="200" data-src="<?=url('admin/project/recover', ['id' => $model->encode_id])?>" data-toggle="tooltip" data-placement="bottom" data-title="恢复项目">恢复</a>
+                                        <a class="btn btn-success btn-xs mr-1" target="_blank" href="<?=url('home/project/show', ['id' => $model->encode_id])?>">查看</a>
                                         <a class="btn btn-info btn-xs" target="_blank" data-toggle="tooltip" data-placement="bottom" data-title="项目动态" href="<?=url('home/project/show', ['id' => $model->encode_id, 'tab' => 'history'])?>">动态</a>
                                     </td>
                                     <?php }?>

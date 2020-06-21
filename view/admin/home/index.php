@@ -1,4 +1,4 @@
-<?=include_view(['name'=>'home/public/header','title'=>'管理中心']);?>
+<?php include_view(['name'=>'home/public/header','title'=>'管理中心'])?>
 
 <style>
     .huge {
@@ -25,7 +25,7 @@
 <div id="wrapper">
 
     <!-- Navigation -->
-    <?=include_view(['name'=>'home/public/nav','sidebar'=>'admin/public/sidebar','active'=>'home'])?>
+    <?php include_view(['name'=>'home/public/nav','sidebar'=>'admin/public/sidebar','active'=>'home'])?>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
@@ -277,4 +277,4 @@
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
     </script>
-    <?=include_view(['name'=>'admin/public/footer'])?>
+    <?php include_view(['name'=>'admin/public/footer'])?>

@@ -2,14 +2,12 @@
 namespace app\services;
 
 use app\models\Field;
-use Yii;
-use yii\web\Response;
 use app\models\Api;
 use app\models\field\CreateField;
 use app\models\field\UpdateField;
 
 
-class FileddService extends BaseService
+class FiledService extends BaseService
 {
     public function create($api_id,$post)
     {
