@@ -5,7 +5,7 @@ use Yii;
 use app\models\Module;
 use app\models\Api;
 use app\models\field\CreateField;
-use app\models\projectLog\CreateLog;
+use app\models\ProjectLog;
 
 class CreateApi extends Api
 {
@@ -73,14 +73,9 @@ class CreateApi extends Api
         }
 
         // 保存操作日志
-        $log = new CreateLog();
-        $log->project_id  = $api->project_id;
-        $log->object_name = 'api';
-        $log->object_id   = $api->id;
-        $log->type        = 'create';
-        $log->content     = '创建了 接口 ' . '<code>' . $api->title . '</code>';
-
-        if(!$log->store()){
+        $log = new ProjectLog();
+        $flag =$log->createProjectLog($api->project_id, 'api', $api->id, 'create', '创建了 接口 ' . '<code>' . $api->title . '</code>');
+        if(!$flag){
             $this->addError($log->getErrorLabel(), $log->getErrorMessage());
             $transaction->rollBack();
             return false;

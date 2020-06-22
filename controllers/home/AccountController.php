@@ -19,6 +19,7 @@ class AccountController extends PublicController
     {
         $ret = ControllerHelper::AjaxPost('注册成功',function() {
             AccountService::G()->regist(ControllerHelper::POST());
+            //ControllerHelper::AjaxPostExtData(['message'=>AccountService::G()->getSuccessMessage());
             ControllerHelper::AjaxPostExtData(['callback' => Url::toRoute(['project/select'])]);
         });
         if($ret){

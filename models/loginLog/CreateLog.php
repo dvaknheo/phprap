@@ -1,7 +1,6 @@
 <?php
 namespace app\models\loginLog;
 
-use Yii;
 use app\models\LoginLog;
 
 class CreateLog extends LoginLog

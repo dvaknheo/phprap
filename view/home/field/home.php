@@ -33,7 +33,7 @@
                         <?php if($project->hasAuth(['api' => 'update'])){?>
                             <?php if($field->id){?>
                             <a href="<?=url('home/field/update', ['id' => $field->encode_id])?>" class="btn btn-sm hidden-xs btn-warning"><i class="fa fa-fw fa-edit"></i>编辑</a>
-                            <?=else?>
+                            <?php }else{?>
                             <a href="<?=url('home/field/create', ['api_id' => $api->encode_id])?>" class="btn btn-sm hidden-xs btn-success"><i class="fa fa-fw fa-edit"></i>添加</a>
                             <?php }?>
                         <?php }?>
@@ -224,7 +224,7 @@
 $(function () {
 
     // 未设置环境弹框提示
-    <?php if($project->getEnvs()->count() == 0){?>
+    <?php if($project->getEnvsCount() == 0){?>
     confirm('项目至少需要设置一个环境，请立即设置', function(){
         window.location.href = "<?=url('project/show', ['id' => $project->encode_id, 'tab' => 'env'])?>";
     });

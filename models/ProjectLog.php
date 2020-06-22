@@ -141,5 +141,21 @@ class ProjectLog extends Model
         return $this;
 
     }
+    public function createProjectLog($project_id,$object_name,$object_id,$type,$content)
+    {
+        $log->user_id     = Yii::$app->user->identity->id;
+        $log->project_id  = $project_id;
+        $log->object_name = $object_name;
+        $log->object_id   = $object_id;
+        $log->type        = $type;
+        $log->content     = $content;
+        $log->created_at  = date('Y-m-d H:i:s');
 
+        if(!$this->save()) {
+            //$this->addError($this->getErrorLabel(), $this->getErrorMessage());
+            return false;
+        }
+
+        return true;
+    }
 }

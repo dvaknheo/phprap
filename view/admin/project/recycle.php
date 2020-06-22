@@ -98,9 +98,9 @@
                                     <td ><?=$model->typeLabel?></td>
 
                                     <td ><?=$model->creater->fullName?></td>
-                                    <td class="text-center"><a href="<?=url('admin/user/index', ['project_id' => $model->encode_id])?>" data-toggle="tooltip" title="" data-original-title="点击查看成员"><?=$model->getMembers()->count()?></a></td>
-                                    <td class="text-center"><?=$model->getModules()->count()?></td>
-                                    <td class="text-center"><?=$model->getApis()->count()?></td>
+                                    <td class="text-center"><a href="<?=url('admin/user/index', ['project_id' => $model->encode_id])?>" data-toggle="tooltip" title="" data-original-title="点击查看成员"><?=$model->getMembersCount()?></a></td>
+                                    <td class="text-center"><?=$model->getModulesCount()?></td>
+                                    <td class="text-center"><?=$model->getApisCount()?></td>
 
                                     <td ><?=$model->updated_at?></td>
                                     <?php if($project->count){?>

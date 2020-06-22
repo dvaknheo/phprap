@@ -95,8 +95,8 @@
                                 <?php foreach($user->models as $model){?>
                                 <tr <?php if($model->status != $model::ACTIVE_STATUS){?>class="danger"<?php }?>>
                                     <td><?=$model->fullName?></td>
-                                    <td class="text-center"><a href="<?=url('admin/project/index', ['creater_id' => $model->id])?>" data-toggle="tooltip" title="" data-original-title="点击查看创建项目"><?=$model->getCreatedProjects()->count()?></a></td>
-                                    <td class="text-center"><a href="<?=url('admin/project/index', ['joiner_id' => $model->id])?>" data-toggle="tooltip" title="" data-original-title="点击查看参与项目"><?=$model->getJoinedProjects()->count()?></a></td>
+                                    <td class="text-center"><a href="<?=url('admin/project/index', ['creater_id' => $model->id])?>" data-toggle="tooltip" title="" data-original-title="点击查看创建项目"><?=$model->getCreatedProjectsCount()?></a></td>
+                                    <td class="text-center"><a href="<?=url('admin/project/index', ['joiner_id' => $model->id])?>" data-toggle="tooltip" title="" data-original-title="点击查看参与项目"><?=$model->getJoinedProjectsCount()?></a></td>
                                     <td><?=$model->ip?></td>
                                     <td><?=$model->location?></td>
                                     <td><?=$model->created_at?></td>

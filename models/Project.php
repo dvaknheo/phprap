@@ -426,5 +426,20 @@ class Project extends Model
 
         return $this;
     }
-
+    public function getMembersCount()
+    {
+        return $this->getMembers()->count();
+    }
+    public function getModulesCount()
+    {
+        return $this->getModules()->count();
+    }
+    public function getApisCount()
+    {
+        return $this->getApis()->count();
+    }
+    public function getEnvsCount()
+    {
+        return $this->getEnvs()->count();
+    }
 }

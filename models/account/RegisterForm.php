@@ -6,6 +6,7 @@ use app\models\Member;
 use app\models\Config;
 use app\models\Account;
 use app\models\loginLog\CreateLog;
+use yii\base\DynamicModel;
 
 class RegisterForm extends Account
 {
@@ -88,29 +89,28 @@ class RegisterForm extends Account
      * @return bool
      * @throws \yii\db\Exception
      */
-    public function register()
+    public function register($data=[])
     {
+        $flag = $this->load($data,'RegisterForm');
+        if(!$flag){
+            $this->addError('', '加载数据失败');
+            return false;
+        }
         if (!$this->validate()) {
             return false;
         }
-
+//        $this->addError('', '完成');
+//         $model = new DynamicModel(compact('name', 'email'));
+//    $model->addRule(['name', 'email'], 'string', ['max' => 128])
+//        ->addRule('email', 'email')
+//        ->validate();
+//        return false;
         // 开启事务
         $transaction = Yii::$app->db->beginTransaction();
 
         $account = new Account();
-
-        $account->name       = $this->name;
-        $account->email      = $this->email;
-        $account->ip         = $this->getUserIp();
-        $account->location   = $this->getLocation();
-        $account->status     = Account::ACTIVE_STATUS;
-        $account->type       = Account::USER_TYPE;
-        $account->created_at = date('Y-m-d H:i:s');
-
-        $account->setPassword($this->password);
-        $account->generateAuthKey();
-
-        if(!$account->save()) {
+        $flag = $account->createAccount($this->name, $this->email, $this->password);
+        if(!$flag) {
             $this->addError($account->getErrorLabel(), $account->getErrorMessage());
             $transaction->rollBack();
             return false;
@@ -137,12 +137,9 @@ class RegisterForm extends Account
         }
 
         // 记录日志
-        $loginLog = new CreateLog();
-        $loginLog->user_id    = $account->id;
-        $loginLog->user_name  = $account->name;
-        $loginLog->user_email = $account->email;
-
-        if(!$loginLog->store()) {
+        $loginLog = new LoginLog();
+        $flag = $loginLog->createLoginLog($account->id, $account->name, $account->email);
+        if(!$flag){
             $this->addError($loginLog->getErrorLabel(), $loginLog->getErrorMessage());
             $transaction->rollBack();
             return false;

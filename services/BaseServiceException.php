@@ -46,11 +46,11 @@ class BaseServiceException extends \Exception
     public function returnArray()
     {
         $ret = ['status' => 'error', 'message' => $this->getMessage()];
-        if(isset($this->model)){
+        if(!empty($this->model)){
             $ret['model'] = $this->model;
         }
-        if(isset($this->label)){
-            $ret['model'] = $this->label;
+        if(!empty($this->label)){
+            $ret['label'] = $this->label;
         }
         
         return $ret;

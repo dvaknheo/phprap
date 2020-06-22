@@ -31,7 +31,7 @@ class ControllerHelper
         $ret = array_merge($ret, static::$ExtJsonData);
         return $ret;
     }
-    public static function AjaxPost($message,$callback)
+    public static function AjaxPost(?string $message,$callback)
     {
         $request = Yii::$app->request;
         if(!$request->isPost){

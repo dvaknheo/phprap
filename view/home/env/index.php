@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="page-header">
                     <h1>项目环境
-                        <small>(<?=$project->getEnvs()->count()?>)</small>
+                        <small>(<?=$project->getEnvsCount()?>)</small>
 
                     </h1>
                     <div class="opt-btn">

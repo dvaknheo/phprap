@@ -94,7 +94,7 @@
                                     <td >
                                         <?php if($model->status == $model::PASS_STATUS){?>
                                         <span class="text-success"><?=$model->statusLabel?></span>
-                                        <?=else if $model->status == $model::REFUSE_STATUS?>
+                                        <?php }else if($model->status == $model::REFUSE_STATUS){?>
                                         <span class="text-danger"><?=$model->statusLabel?></span>
                                         <?php }?>
                                     </td>

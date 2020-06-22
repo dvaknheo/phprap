@@ -118,11 +118,11 @@
                             <li class="left clearfix">
                                 <?php if($model->type == 'delete'){?>
                                 <div class="timeline-badge delete pull-left"><i class="fa fa-fw fa-trash-o"></i></div>
-                                <?=else if $model->type == 'export'?>
+                                <?php }else if ($model->type == 'export'){?>
                                 <div class="timeline-badge export pull-left"><i class="fa fa-fw fa-download"></i></div>
-                                <?=else if $model->type == 'create'?>
+                                <?php }else if ($model->type == 'create'){?>
                                 <div class="timeline-badge create pull-left"><i class="fa fa-fw fa-plus"></i></div>
-                                <?=else if $model->type == 'update'?>
+                                <?php }else if ($model->type == 'update'){?>
                                 <div class="timeline-badge update pull-left"><i class="fa fa-fw fa-edit"></i></div>
                                 <?php }?>
 
@@ -159,7 +159,7 @@
 $(function () {
 
     // 未设置环境弹框提示
-    <?php if($project->getEnvs()->count() == 0){?>
+    <?php if($project->getEnvsCount() == 0){?>
     confirm('项目至少需要设置一个环境，请立即设置', function(){
 
         window.location.href = "<?=url('project/show', ['id' => $project->encode_id, 'tab' => 'env'])?>";

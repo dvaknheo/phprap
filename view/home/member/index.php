@@ -107,7 +107,7 @@
 
                                         <?php if($project->hasAuth(['member' => 'update'])){?>
                                         <a type="button" class="btn btn-success btn-xs mr-1" data-toggle="tooltip" data-placement="top" data-title="编辑成员" data-modal="#js_popModal" data-width="760" data-height="350" data-src="<?=url('home/member/update', ['id' => $model->encode_id])?>">编辑</a>
-                                        <?=else?>
+                                        <?php }else{?>
                                         <a type="button" class="btn btn-success btn-xs mr-1" data-toggle="tooltip" data-placement="top" data-title="查看成员" data-modal="#js_popModal" data-width="760" data-height="350" data-ok-btn-show="false" data-src="<?=url('home/member/show', ['id' => $model->encode_id])?>">查看</a>
                                         <?php }?>
 
@@ -142,7 +142,7 @@
 $(function () {
 
     // 未设置环境弹框提示
-    <?php if($project->getEnvs()->count() == 0){?>
+    <?php if($project->getEnvsCount() == 0){?>
     confirm('项目至少需要设置一个环境，请立即设置', function(){
 
         window.location.href = "<?=url('project/show', ['id' => $project->encode_id, 'tab' => 'env'])?>";

@@ -34,7 +34,7 @@
                         <i class="fa fa-info-circle"></i>
                     </a>
                 </label>
-                <input type="text" class="form-control js_sort" name="UpdateModule[sort]" value="<?=$module->sort|default:0?>" placeholder="排序数字越大越靠前" datatype="n" nullmsg="请输入排序数字" errormsg="必须是数字">
+                <input type="text" class="form-control js_sort" name="UpdateModule[sort]" value="<?=$module->sort??0?>" placeholder="排序数字越大越靠前" datatype="n" nullmsg="请输入排序数字" errormsg="必须是数字">
             </div>
 
             <input type="hidden" id="js_submit" value="提交">

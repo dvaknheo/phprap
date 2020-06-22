@@ -30,7 +30,7 @@
                     <div class="opt-btn">
                         <?php if($project->template->id){?>
                         <a href="<?=url('home/template/update', ['id' => $template->encode_id])?>" class="btn hidden-xs btn-sm btn-warning"><i class="fa fa-fw fa-plus"></i>编辑</a>
-                        <?=else?>
+                        <?php }else{?>
                         <a href="<?=url('home/template/create', ['project_id' => $project->encode_id])?>" class="btn hidden-xs btn-sm btn-success"><i class="fa fa-fw fa-plus"></i>添加</a>
                         <?php }?>
                     </div>
@@ -219,7 +219,7 @@
 <script>
     $(function () {
         // 未设置环境弹框提示
-        <?php if($project->getEnvs()->count() == 0){?>
+        <?php if($project->getEnvsCount() == 0){?>
         confirm('项目至少需要设置一个环境，请立即设置', function(){
             window.location.href = "<?=url('project/show', ['id' => $project->encode_id, 'tab' => 'env'])?>";
         });

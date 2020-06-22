@@ -168,5 +168,18 @@ class Account extends User
 
         return $this->save();
     }
-
+    public function getCreatedProjectsCount()
+    {
+        return $this->getCreatedProjects()->count();
+    }
+    public function getJoinedProjectsCount()
+    {
+        return $this->getJoinedProjects()->count();
+    }
+    /*
+     * <?=$account->getCreatedProjects(10)->count()?>
+<?=$account->getCreatedProjects(30)->count()?>
+<?=$account->getJoinedProjects(10)->count()?>
+<?=$account->getJoinedProjects(30)->count()?>
+     */
 }

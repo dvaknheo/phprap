@@ -33,7 +33,7 @@
 
                     <?php if($project->members){?>
                     <input type="text" class="form-control js_selectMemberBtn" placeholder="输入昵称或邮箱，支持模糊查询" datatype="*1-250" nullmsg="请选择项目成员">
-                    <?=else?>
+                    <?php }else{?>
                     <input type="text" readonly class="form-control" placeholder="暂无成员" value="">
                     <?php }?>
                     <input class="js_userId" type="hidden" name='TransferProject[user_id]' datatype="n" nullmsg="请选择项目成员" value="">

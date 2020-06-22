@@ -4,7 +4,7 @@ namespace app\models\account;
 use Yii;
 use app\models\Account;
 use app\models\Config;
-use app\models\loginLog\CreateLog;
+use app\models\LoginLog;
 
 class LoginForm extends Account
 {
@@ -66,19 +66,14 @@ class LoginForm extends Account
         $account = Account::findByEmail($this->email);
 
         // 记录日志
-        $loginLog = new CreateLog();
-        $loginLog->user_id    = $account->id;
-        $loginLog->user_name  = $account->name;
-        $loginLog->user_email = $account->email;
-
-        if(!$loginLog->store()){
+        $loginLog = new LoginLog();
+        $flag = $loginLog->createLoginLog($account->id, $account->name, $account->email);
+        if(!$flag){
             $this->addError($loginLog->getErrorLabel(), $loginLog->getErrorMessage());
             return false;
         }
-
-        $config = Config::findOne(['type' => 'safe']);
-        $login_keep_time = $config->login_keep_time;
-
+        
+        $login_keep_time = Config::GetLoginKeepTime();
         return Yii::$app->user->login($account, 60*60*$login_keep_time);
     }
 

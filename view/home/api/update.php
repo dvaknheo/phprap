@@ -42,7 +42,7 @@
                     <label class="radio-inline">
                         <?php if(!$api->id){?>
                         <input type="radio" name="UpdateApi[request_method]" <?php if($k == 'post'){?>checked<?php }?> value="<?=$k?>"> <?=$v?>
-                        <?=else?>
+                        <?php }else{?>
                         <input type="radio" name="UpdateApi[request_method]" <?php if($k == $api->request_method){?>checked<?php }?> value="<?=$k?>"> <?=$v?>
                         <?php }?>
                     </label>
@@ -77,7 +77,7 @@
                         <i class="fa fa-info-circle"></i>
                     </a>
                 </label>
-                <input type="text" class="form-control js_sort" name="UpdateApi[sort]" value="<?=$api->sort|default:0?>" placeholder="排序数字越大越靠前" datatype="n" nullmsg="请输入排序数字" errormsg="必须是数字">
+                <input type="text" class="form-control js_sort" name="UpdateApi[sort]" value="<?=$api->sort??0?>" placeholder="排序数字越大越靠前" datatype="n" nullmsg="请输入排序数字" errormsg="必须是数字">
             </div>
 
 

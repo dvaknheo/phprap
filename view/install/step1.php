@@ -36,19 +36,19 @@
                                                 <tbody>
                                                 <tr>
                                                     <td>操作系统</td>
-                                                    <td><?=$smarty.const.PHP_OS?></td>
+                                                    <td><?=PHP_OS?></td>
                                                     <td>Linux/Win</td>
                                                     <td><i class="fa fa-check"></i></td>
                                                 </tr>
 
                                                 <tr>
                                                     <td>PHP版本</td>
-                                                    <td><?=$smarty.const.PHP_VERSION?></td>
+                                                    <td><?=PHP_VERSION?></td>
                                                     <td>>=5.6.0</td>
                                                     <td>
-                                                        <?php if(version_compare($smarty.const.PHP_VERSION, '5.6.0', '>=' )){?>
+                                                        <?php if(version_compare(PHP_VERSION, '5.6.0', '>=' )){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" name="step1['php_version']" value="当前PHP版本不符合要求" >
                                                         <?php }?>
@@ -84,12 +84,12 @@
 
                                                 <tr>
                                                     <td>Reflection 扩展</td>
-                                                    <td><?php if(extension_loaded('reflection')){?>支持<?=else?>不支持<?php }?></td>
+                                                    <td><?php if(extension_loaded('reflection')){?>支持<?php }else{?>不支持<?php }?></td>
                                                     <td>支持</td>
                                                     <td>
                                                         <?php if(extension_loaded('reflection')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装reflection扩展" >
                                                         <?php }?>
@@ -98,12 +98,12 @@
 
                                                 <tr>
                                                     <td>MBString 扩展</td>
-                                                    <td><?php if(extension_loaded('mbstring')){?>支持<?=else?>不支持<?php }?></td>
+                                                    <td><?php if(extension_loaded('mbstring')){?>支持<?php }else{?>不支持<?php }?></td>
                                                     <td>支持</td>
                                                     <td>
                                                         <?php if(extension_loaded('mbstring')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装mbstring扩展">
                                                         <?php }?>
@@ -112,12 +112,12 @@
 
                                                 <tr>
                                                     <td>SPL 扩展</td>
-                                                    <td><?php if(extension_loaded('spl')){?>支持<?=else?>不支持<?php }?></td>
+                                                    <td><?php if(extension_loaded('spl')){?>支持<?php }else{?>不支持<?php }?></td>
                                                     <td>支持</td>
                                                     <td>
                                                         <?php if(extension_loaded('spl')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装spl扩展">
                                                         <?php }?>
@@ -126,12 +126,12 @@
 
                                                 <tr>
                                                     <td>PDO 扩展</td>
-                                                    <td><?php if(extension_loaded('pdo')){?>支持<?=else?>不支持<?php }?></td>
+                                                    <td><?php if(extension_loaded('pdo')){?>支持<?php }else{?>不支持<?php }?></td>
                                                     <td>支持</td>
                                                     <td>
                                                         <?php if(extension_loaded('pdo')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装pdo扩展">
                                                         <?php }?>
@@ -140,12 +140,12 @@
 
                                                 <tr>
                                                     <td>PDO MySQL 扩展</td>
-                                                    <td><?php if(extension_loaded('pdo_mysql')){?>支持<?=else?>不支持<?php }?></td>
+                                                    <td><?php if(extension_loaded('pdo_mysql')){?>支持<?php }else{?>不支持<?php }?></td>
                                                     <td>支持</td>
                                                     <td>
                                                         <?php if(extension_loaded('pdo_mysql')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装pdo_mysql扩展">
                                                         <?php }?>
@@ -157,7 +157,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('gd')){?>
                                                         支持
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         不支持
                                                         <?php }?>
                                                     </td>
@@ -165,7 +165,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('gd')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装gd扩展" >
                                                         <?php }?>
@@ -177,7 +177,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('openssl')){?>
                                                         支持
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         不支持
                                                         <?php }?>
                                                     </td>
@@ -185,7 +185,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('openssl')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装openssl扩展" >
                                                         <?php }?>
@@ -197,7 +197,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('curl')){?>
                                                         支持
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         不支持
                                                         <?php }?>
                                                     </td>
@@ -205,7 +205,7 @@
                                                     <td>
                                                         <?php if(extension_loaded('curl')){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="必须安装curl扩展" >
                                                         <?php }?>
@@ -242,12 +242,12 @@
                                                 <?php foreach($step1 as $k => $v){?>
                                                 <tr>
                                                     <td><?=$k?></td>
-                                                    <td><?=$v.have_chmods?></td>
-                                                    <td><?=$v.require_chmods?></td>
+                                                    <td><?=?$v.have_chmods?></td>
+                                                    <td><?=?$v.require_chmods?></td>
                                                     <td>
                                                         <?php if($v.check_chmod){?>
                                                         <i class="fa fa-check"></i>
-                                                        <?=else?>
+                                                        <?php }else{?>
                                                         <i class="fa fa-times"></i>
                                                         <input type="hidden" datatype="*" nullmsg="<?=$k?>必须可写" >
                                                         <?php }?>

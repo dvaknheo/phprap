@@ -145,7 +145,7 @@
         });
 
         // 未设置环境弹框提示
-        <?php if($project->getEnvs()->count() == 0){?>
+        <?php if($project->getEnvsCount() == 0){?>
         confirm('项目至少需要设置一个环境，请立即设置', function(){
             window.location.href = "<?=url('project/show', ['id' => $project->encode_id, 'tab' => 'env'])?>";
         });

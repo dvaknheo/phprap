@@ -16,7 +16,7 @@
                 <div class="search">
                     <div class="well">
                         <h4>
-                            <i class="fa <?php if($flag == 'error'){?>fa-times-circle<?=else?>fa-check-circle<?php }?> fa-fw"></i>
+                            <i class="fa <?php if($flag == 'error'){?>fa-times-circle<?php }else{?>fa-check-circle<?php }?> fa-fw"></i>
                             <?=$message?>
                         </h4>
 

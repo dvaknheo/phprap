@@ -62,5 +62,9 @@ class Config extends Model
         }
         return parent::__get($name);
     }
-
+    public static function GetLoginKeepTime()
+    {
+        Config::findOne(['type' => 'safe']);
+        return $config->login_keep_time;
+    }
 }

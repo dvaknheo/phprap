@@ -1,6 +1,7 @@
 <?php
 namespace app\services;
 
+use Yii;
 use app\models\Config;
 use app\models\account\LoginForm;
 use app\models\account\PasswordForm;
@@ -11,12 +12,14 @@ class AccountService extends BaseService
 {
     public function regist($post)
     {
-        $model = new RegisterForm();
+        $this->setSuccessMessage('注册成功');
         
-        $flag = $model->load($post);
-        BaseServiceException::AssertOn($flag,'加载数据失败');
-        $flag = $model->register();
+        $flag = (new RegisterForm)->register($post);
         BaseServiceException::AssertWithModel($flag,$model);
+        
+        //$config = Config::findOne(['type' => 'safe']);
+        //$login_keep_time = $config->login_keep_time;
+        //return Yii::$app->user->login($account, 60*60*$login_keep_time);
     }
     public function getRegistInfo()
     {

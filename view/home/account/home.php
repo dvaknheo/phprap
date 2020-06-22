@@ -43,8 +43,8 @@
                         <p class="text-muted"><label>注册时间：</label><?=$account->created_at?></p>
                         <p class="text-muted"><label>注册IP：</label><?=$account->ip?></p>
                         <p class="text-muted"><label>注册地点：</label><?=$account->location?></p>
-                        <p class="text-muted"><label>创建项目数：</label><?=$account->getCreatedProjects()->count()?></p>
-                        <p class="text-muted"><label>参数项目数：</label><?=$account->getJoinedProjects()->count()?></p>
+                        <p class="text-muted"><label>创建项目数：</label><?=$account->getCreatedProjectsCount()?></p>
+                        <p class="text-muted"><label>参数项目数：</label><?=$account->getJoinedProjectsCount()?></p>
 
                     </div>
                     <!-- /.panel-body -->

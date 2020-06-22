@@ -93,7 +93,7 @@
                                     <td >
                                         <?php if($model->isCreater() || $model->isJoiner()){?>
                                         <a class="btn btn-success btn-xs disabled mr-1">加入</a>
-                                        <?=else?>
+                                        <?php }else{?>
                                         <a href="javascript:;" class="btn btn-success btn-xs mr-1" data-toggle="tooltip" data-placement="bottom" data-modal="#js_popModal" data-height="140" data-title="加入项目"  data-src="<?=url('home/apply/create', ['project_id' => $model->encode_id])?>">加入</a>
                                         <?php }?>
                                         <a target="_blank" href="<?=$model->url?>" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" data-title="查看项目">查看</a>
