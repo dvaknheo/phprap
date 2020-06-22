@@ -3,7 +3,6 @@ namespace app\models\member;
 
 use Yii;
 use app\models\Member;
-use app\models\projectLog\CreateLog;
 
 class UpdateMember extends Member
 {
@@ -65,14 +64,10 @@ class UpdateMember extends Member
         }
 
         // 保存操作日志
-        $log = new CreateLog();
-        $log->project_id  = $member->project_id;
-        $log->object_name = 'member';
-        $log->object_id   = $member->id;
-        $log->type        = 'update';
-        $log->content     = '更新了 成员 ' . '<code>' . $member->account->fullName . '</code> 操作权限';
+        $log = new \app\models\ProjectLog();
+        $flag = $log->createProjectLog($member->project_id, 'member',$member->id, 'update',  '更新了 成员 ' . '<code>' . $member->account->fullName . '</code> 操作权限');
 
-        if(!$log->store()){
+        if(!$flag){
             $this->addError($log->getErrorLabel(), $log->getErrorMessage());
             $transaction->rollBack();
             return false;

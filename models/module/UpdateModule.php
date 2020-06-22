@@ -3,7 +3,6 @@ namespace app\models\module;
 
 use Yii;
 use app\models\Module;
-use app\models\projectLog\CreateLog;
 
 class UpdateModule extends Module
 {
@@ -55,14 +54,10 @@ class UpdateModule extends Module
 
         // 如果有更改，保存操作日志
         if(array_filter($module->dirtyAttributes)) {
-            $log = new CreateLog();
-            $log->project_id  = $module->project->id;
-            $log->object_name = 'module';
-            $log->object_id   = $module->id;
-            $log->type        = 'update';
-            $log->content     = $module->getUpdateContent();
+            $log = new \app\models\ProjectLog();
+            $flag = $log->createProjectLog($module->project->id, 'module',$module->id,'update',$module->getUpdateContent());
 
-            if(!$log->store()){
+            if(!$flag){
                 $this->addError($log->getErrorLabel(), $log->getErrorMessage());
                 $transaction->rollBack();
                 return false;

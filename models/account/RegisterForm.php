@@ -5,7 +5,6 @@ use Yii;
 use app\models\Member;
 use app\models\Config;
 use app\models\Account;
-use app\models\loginLog\CreateLog;
 use yii\base\DynamicModel;
 
 class RegisterForm extends Account

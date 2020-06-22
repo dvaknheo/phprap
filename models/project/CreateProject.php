@@ -3,7 +3,6 @@ namespace app\models\project;
 
 use Yii;
 use app\models\Project;
-use app\models\projectLog\CreateLog;
 
 class CreateProject extends Project
 {
@@ -74,14 +73,9 @@ class CreateProject extends Project
         }
 
         // 保存操作日志
-        $log = new CreateLog();
-        $log->project_id  = $project->id;
-        $log->object_name = 'project';
-        $log->object_id   = $project->id;
-        $log->type        = 'create';
-        $log->content     = '创建了 项目 ' . '<code>' . $project->title . '</code>';
-
-        if(!$log->store()){
+        $log = new \app\models\ProjectLog();
+        $flag = $log->createProjectLog($project->id, 'project',$project->id,'create','创建了 项目 ' . '<code>' . $project->title . '</code>');
+        if(!$flag){
             $this->addError($log->getErrorLabel(), $log->getErrorMessage());
             $transaction->rollBack();
             return false;

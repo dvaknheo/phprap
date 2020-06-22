@@ -7,7 +7,6 @@ use app\models\Template;
 use app\models\Member;
 use app\models\Field;
 use app\models\ProjectLog;
-use app\models\projectLog\CreateLog;
 use app\models\project\CreateProject;
 use app\models\project\UpdateProject;
 use app\models\project\QuitProject;
@@ -206,14 +205,9 @@ class ProjectService extends BaseService
         $file_name = $project->title . '离线文档' . '.' . $format;
 
         // 记录操作日志
-        $log = new CreateLog();
-        $log->project_id  = $project->id;
-        $log->object_name = 'project';
-        $log->object_id   = $project->id;
-        $log->type        = 'export';
-        $log->content     = '导出了 ' . '<code>' . $file_name . '</code>';
-
-        if(!$log->store()){
+        $log = new \app\models\ProjectLog();
+        $flag = $log->createProjectLog($project->id, 'project', $project->id, 'export', '导出了 ' . '<code>' . $file_name . '</code>');
+        if(!$flag){
             BaseServiceException::ThrowOn(true,$log->getErrorMessage());
         }
         

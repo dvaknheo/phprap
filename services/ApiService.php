@@ -1,4 +1,5 @@
 <?php
+
 namespace app\services;
 
 use Yii;
@@ -10,32 +11,29 @@ use app\models\api\CreateApi;
 use app\models\api\UpdateApi;
 use app\models\api\DeleteApi;
 use app\models\ProjectLog;
-use app\models\projectLog\CreateLog;
 use Curl\Curl;
 
+class ApiService extends BaseService {
 
-class ApiService extends BaseService
-{
-    public function getDebugInfo($id)
-    {
+    public function getDebugInfo($id) {
         $api = Api::findModel(['encode_id' => $id]);
-        BaseServiceException::AssertOn($api->id,'抱歉，接口不存在或者已被删除');
+        BaseServiceException::AssertOn($api->id, '抱歉，接口不存在或者已被删除');
 
         $project = $api->project;
-        BaseServiceException::AssertOn(count($project->envs),'请先设置项目环境');
+        BaseServiceException::AssertOn(count($project->envs), '请先设置项目环境');
     }
-    public function debug($id,$post)
-    {
+
+    public function debug($id, $post) {
         $curl_api = $post['api'];
         $header_params = $post['header'];
         $request_params = $post['request'];
-        
+
         $api = Api::findModel(['encode_id' => $id]);
-        BaseServiceException::AssertOn($api->id,'抱歉，接口不存在或者已被删除');
+        BaseServiceException::AssertOn($api->id, '抱歉，接口不存在或者已被删除');
 
         $project = $api->project;
-        BaseServiceException::AssertOn(count($project->envs),'请先设置项目环境');
-        
+        BaseServiceException::AssertOn(count($project->envs), '请先设置项目环境');
+
         $request_url = $curl_api['request_url'];
         $request_method = $curl_api['request_method'];
         $header_params = $this->getHeaderParams($header_params);
@@ -69,7 +67,7 @@ class ApiService extends BaseService
         }
 
         if ($curl->error) {
-            throw new BaseServiceException($curl->errorMessage,$curl->errorCode);
+            throw new BaseServiceException($curl->errorMessage, $curl->errorCode);
         }
 
         if ($api->response_format == 'json' and $api->response_auto_parse == 1) {
@@ -83,8 +81,8 @@ class ApiService extends BaseService
                     $save = json_decode($field->response_fields, true);
                     $post = json_decode(Field::json2SaveJson($curl->rawResponse), true);
                     $res = Field::compareMergeResponseArray(
-                        is_array($post) ? $post : [],
-                        is_array($save) ? $save : []
+                                    is_array($post) ? $post : [],
+                                    is_array($save) ? $save : []
                     );
                     $field->response_fields = json_encode($res);
                 } else {
@@ -101,13 +99,13 @@ class ApiService extends BaseService
         }
         return ['status' => 'success', 'body' => $curl->rawResponse, 'info' => $curl->getInfo()];
     }
+
     /**
      * 获取header参数
      * @param $header
      * @return array
      */
-    private function getHeaderParams($header)
-    {
+    private function getHeaderParams($header) {
         if (!$header) {
             return [];
         }
@@ -125,15 +123,14 @@ class ApiService extends BaseService
      * @param $request
      * @return array
      */
-    private function getRequestParams($request)
-    {
+    private function getRequestParams($request) {
         if (!$request) {
             return [];
         }
 
         $params = [];
         if (isset($request['level']) and isset($request['name']) and isset($request['parent_id'])
-            and isset($request['id']) and isset($request['example_value']) and isset($request['type'])) {
+                and isset($request['id']) and isset($request['example_value']) and isset($request['type'])) {
             foreach ($request['id'] as $index => $id) {
                 switch ($request['type'][$index]) {
                     case 'object':
@@ -158,7 +155,6 @@ class ApiService extends BaseService
                         $value = boolval($request['example_value'][$index]);
                         $this->getValueFromRequest($request, $params, $index, $value);
                         break;
-
                 }
             }
         }
@@ -172,8 +168,7 @@ class ApiService extends BaseService
         return $params;
     }
 
-    private function getValueFromRequest(array $request, array &$params, $index, $value)
-    {
+    private function getValueFromRequest(array $request, array &$params, $index, $value) {
         if ($request['parent_id'][$index] != '0') {
 
             foreach ($request['id'] as $pos => $parent_id) {
@@ -192,56 +187,56 @@ class ApiService extends BaseService
             $params[$request['name'][$index]] = $value;
         }
     }
-    public function getDataForCreate($module_id)
-    {
+
+    public function getDataForCreate($module_id) {
         $module = Module::findModel(['encode_id' => $module_id]);
         $api = new CreateApi();
         return ['api' => $api, 'module' => $module];
     }
-    public function create($post)
-    {
+
+    public function create($post) {
         $model = new CreateApi();
-        
+
         $flag = $model->load($post);
-        BaseServiceException::AssertOn($flag,'数据加载失败');
+        BaseServiceException::AssertOn($flag, '数据加载失败');
         $flag = $model->store();
-        BaseServiceException::AssertWithModel($flag,$model);
+        BaseServiceException::AssertWithModel($flag, $model);
         return $model->encode_id;
     }
-    public function getDataForUpdate($id)
-    {
+
+    public function getDataForUpdate($id) {
         $api = UpdateApi::findModel(['encode_id' => $id]);
         return ['api' => $api];
     }
-    public function update($id,$post)
-    {
-        $model =  UpdateApi::findModel(['encode_id' => $id]);
-        
+
+    public function update($id, $post) {
+        $model = UpdateApi::findModel(['encode_id' => $id]);
+
         $flag = $model->load($post);
-        BaseServiceException::AssertOn($flag,'数据加载失败');
+        BaseServiceException::AssertOn($flag, '数据加载失败');
         $flag = $model->store();
-        BaseServiceException::AssertWithModel($flag,$model);
-        
+        BaseServiceException::AssertWithModel($flag, $model);
+
         return $model->encode_id;
     }
-    public function getDataForDelete($id)
-    {
+
+    public function getDataForDelete($id) {
         $api = DeleteApi::findModel(['encode_id' => $id]);
         return ['api' => $api];
     }
-    public function delete($id,$post)
-    {
-        $api =  DeleteApi::findModel(['encode_id' => $id]);
-        
+
+    public function delete($id, $post) {
+        $api = DeleteApi::findModel(['encode_id' => $id]);
+
         $flag = $model->load($post);
-        BaseServiceException::AssertOn($flag,'数据加载失败');
+        BaseServiceException::AssertOn($flag, '数据加载失败');
         $flag = $model->delete();
-        BaseServiceException::AssertWithModel($flag,$model);
-        
+        BaseServiceException::AssertWithModel($flag, $model);
+
         return $model->module->project->encode_id;
     }
-    public function show($id,$tab,$params,$is_guest,$is_admin)
-    {
+
+    public function show($id, $tab, $params, $is_guest, $is_admin) {
         $api = Api::findModel(['encode_id' => $id]);
 
         if (!$api->id) {
@@ -254,29 +249,29 @@ class ApiService extends BaseService
 
         if ($api->project->isPrivate()) {
             if ($is_guest) {
-                return ['__redirect'=>true];
+                return ['__redirect' => true];
             }
             if (!$api->project->hasAuth(['project' => 'look'])) {
-                BaseServiceException::ThrowOn(true,'抱歉，您无权查看');
+                BaseServiceException::ThrowOn(true, '抱歉，您无权查看');
             }
         }
-        
+
         $assign['api'] = $api;
         $assign['project'] = $api->project;
-        
+
         switch ($tab) {
             case 'field':
                 $assign['field'] = $api->field;
                 break;
             case 'debug':
                 if (!$api->project->hasAuth(['api' => 'debug'])) {
-                    BaseServiceException::ThrowOn(true,'抱歉，您无权查看');
+                    BaseServiceException::ThrowOn(true, '抱歉，您无权查看');
                 }
                 $assign['field'] = $api->field;
                 break;
             case 'history':
                 if (!$api->project->hasAuth(['api' => 'history'])) {
-                    BaseServiceException::ThrowOn(true,'抱歉，您无权查看');
+                    BaseServiceException::ThrowOn(true, '抱歉，您无权查看');
                 }
                 $params['object_name'] = 'api';
                 $params['object_id'] = $api->id;
@@ -285,33 +280,31 @@ class ApiService extends BaseService
         }
         return $assign;
     }
-    public function getApiToExport($id)
-    {
+
+    public function getApiToExport($id) {
         $api = Api::findModel(['encode_id' => $id]);
         if (!$api->project->hasAuth(['api' => 'export'])) {
-            BaseServiceException::ThrowOn(true,'抱歉，您没有操作权限');
+            BaseServiceException::ThrowOn(true, '抱歉，您没有操作权限');
         }
         // 记录操作日志
-        $log = new CreateLog();
-        $log->project_id = $api->id;
-        $log->object_name = 'api';
-        $log->object_id = $api->id;
-        $log->type = 'export';
-        $log->content = '导出了 ' . '<code>' . $file_name . '</code>';
 
-        if (!$log->store()) {
-            BaseServiceException::ThrowOn(true,$log->getErrorMessage());
+        $log = new \app\models\ProjectLog();
+        $flag = $log->createProjectLog($api->id, 'api', $api->id, 'export', '导出了 ' . '<code>' . $file_name . '</code>');
+
+
+        if (!$flag) {
+            BaseServiceException::ThrowOn(true, $log->getErrorMessage());
         }
-        
+
         return $api;
     }
-    public function cacheExportLockCheck($id,$account_id)
-    {
+
+    public function cacheExportLockCheck($id, $account_id) {
         $cache = Yii::$app->cache;
         $config = Config::findOne(['type' => 'app']);
-        
+
         $cache_key = 'api_' . $id . '_' . $account_id;
-        $cache_interval = (int)$config->export_time;
+        $cache_interval = (int) $config->export_time;
 
         if ($cache_interval > 0 && $cache->get($cache_key) !== false) {
             $remain_time = $cache->get($cache_key) - time();
@@ -321,16 +314,16 @@ class ApiService extends BaseService
         }
         return true;
     }
-    public function cacheExportLockSet($id,$account_id)
-    {
+
+    public function cacheExportLockSet($id, $account_id) {
         $cache = Yii::$app->cache;
         $config = Config::findOne(['type' => 'app']);
-        
+
         $cache_key = 'api_' . $id . '_' . $account_id;
-        $cache_interval = (int)$config->export_time;
-        
+        $cache_interval = (int) $config->export_time;
+
         // 限制导出频率, 60秒一次
         $cache_interval > 0 && $cache->set($cache_key, time() + $cache_interval, $cache_interval);
-
     }
+
 }

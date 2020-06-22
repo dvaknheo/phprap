@@ -3,7 +3,6 @@ namespace app\models\env;
 
 use Yii;
 use app\models\Env;
-use app\models\projectLog\CreateLog;
 
 class UpdateEnv extends Env
 {
@@ -82,14 +81,10 @@ class UpdateEnv extends Env
 
         // 如果有更改，保存操作日志
         if(array_filter($env->dirtyAttributes)) {
-            $log = new CreateLog();
-            $log->project_id  = $env->project->id;
-            $log->object_name = 'env';
-            $log->object_id   = $env->id;
-            $log->type        = 'update';
-            $log->content     = $env->getUpdateContent();
+            $log = new \app\models\ProjectLog();
+            $flag = $log->createProjectLog($env->project->id, 'env', $env->id, 'update',  $env->getUpdateContent());
 
-            if(!$log->store()){
+            if(!$flag){
                 $this->addError($log->getErrorLabel(), $log->getErrorMessage());
                 $transaction->rollBack();
                 return false;

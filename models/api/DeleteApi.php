@@ -3,7 +3,6 @@ namespace app\models\api;
 
 use Yii;
 use app\models\Api;
-use app\models\projectLog\CreateLog;
 
 class DeleteApi extends Api
 {
@@ -79,12 +78,8 @@ class DeleteApi extends Api
         }
 
         // 保存操作日志
-        $log = new CreateLog();
-        $log->project_id  = $api->project_id;
-        $log->type        = 'delete';
-        $log->object_name = 'api';
-        $log->object_id   = $api->id;
-        $log->content     = '删除了 接口 <code>' . $api->title . '</code>';
+        $log = new \app\models\ProjectLog();
+        $log->createProjectLog($api->project_id, 'api', $api->id, 'delete', '删除了 接口 <code>' . $api->title . '</code>');
 
         if(!$log->store()){
             $this->addError($log->getErrorLabel(), $log->getErrorMessage());

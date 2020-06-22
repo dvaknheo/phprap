@@ -3,7 +3,6 @@ namespace app\models\field;
 
 use Yii;
 use app\models\Field;
-use app\models\projectLog\CreateLog;
 
 class UpdateField extends Field
 {
@@ -57,14 +56,9 @@ class UpdateField extends Field
 
         // 如果有更改，保存操作日志
         if(array_filter($field->dirtyAttributes)) {
-            $log = new CreateLog();
-            $log->project_id  = $field->api->project->id;
-            $log->object_name = 'api';
-            $log->object_id   = $field->api->id;
-            $log->type        = 'update';
-            $log->content     = $field->getUpdateContent();
-
-            if(!$log->store()){
+            $log = new \app\models\ProjectLog();
+            $flag = $log->createProjectLog($field->api->project->id, 'api',$field->api->id, 'update',  $field->getUpdateContent());
+            if(!$flag){
                 $this->addError($log->getErrorLabel(), $log->getErrorMessage());
                 $transaction->rollBack();
                 return false;

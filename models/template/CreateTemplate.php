@@ -4,7 +4,6 @@ namespace app\models\template;
 use app\models\Project;
 use Yii;
 use app\models\Template;
-use app\models\projectLog\CreateLog;
 
 class CreateTemplate extends Template
 {

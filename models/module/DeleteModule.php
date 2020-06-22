@@ -3,7 +3,6 @@ namespace app\models\module;
 
 use Yii;
 use app\models\Module;
-use app\models\projectLog\CreateLog;
 
 class DeleteModule extends Module
 {
@@ -80,16 +79,10 @@ class DeleteModule extends Module
             $transaction->rollBack();
             return false;
         }
-
+        $log = new \app\models\ProjectLog();
+        $flag = $log->createProjectLog($module->project->id, 'module',$module->id, '删除了 模块 ' . '<code>' . $module->title . '</code>');
         // 保存操作日志
-        $log = new CreateLog();
-        $log->project_id  = $module->project->id;
-        $log->object_name = 'module';
-        $log->object_id   = $module->id;
-        $log->type        = 'delete';
-        $log->content     = '删除了 模块 ' . '<code>' . $module->title . '</code>';
-
-        if(!$log->store()){
+        if(!$flag){
             $this->addError($log->getErrorLabel(), $log->getErrorMessage());
             $transaction->rollBack();
             return false;

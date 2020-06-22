@@ -1,7 +1,6 @@
 <?php
 namespace app\models\field;
 
-use app\models\projectLog\CreateLog;
 use Yii;
 use app\models\Api;
 use app\models\Field;
@@ -62,16 +61,11 @@ class CreateField extends Field
 
         // 保存操作日志
         if(array_filter($field->dirtyAttributes)) {
-            $log = new CreateLog();
 
             $api = Api::findOne($this->api_id);
-
-            $log->project_id  = $api->project->id;
-            $log->object_name = 'api';
-            $log->object_id   = $api->id;
-            $log->type        = 'update';
-            $log->content     = $field->getUpdateContent();
-
+            $log = new ProejectLog();
+            $log->createProjectLog($api->project->id, 'api', $api->id, 'update',  $field->getUpdateContent());
+            
             if(!$log->store()){
                 $this->addError($log->getErrorLabel(), $log->getErrorMessage());
                 $transaction->rollBack();

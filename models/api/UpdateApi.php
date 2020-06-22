@@ -4,7 +4,6 @@ namespace app\models\api;
 use Yii;
 use app\models\Module;
 use app\models\Api;
-use app\models\projectLog\CreateLog;
 
 class UpdateApi extends Api
 {
@@ -61,12 +60,11 @@ class UpdateApi extends Api
 
         // 如果有更改，保存操作日志
         if(array_filter($api->dirtyAttributes)) {
-            $log = new CreateLog();
-            $log->project_id  = $api->project->id;
-            $log->object_name = 'api';
-            $log->object_id   = $api->id;
-            $log->type        = 'update';
-            $log->content     = $api->getUpdateContent();
+            //$log = new CreateLog();
+            $log = new \app\models\ProjectLog();
+            $log->createProjectLog($api->project->id, 'api', $api->id, 'update',  $api->getUpdateContent());
+
+
 
             if(!$log->store()){
                 $this->addError($log->getErrorLabel(), $log->getErrorMessage());
