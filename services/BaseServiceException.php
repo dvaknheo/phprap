@@ -1,5 +1,6 @@
 <?php
 namespace app\services;
+use app\helpers\ServiceHelper;
 
 class BaseServiceException extends \Exception
 {
@@ -10,6 +11,7 @@ class BaseServiceException extends \Exception
         if(!$flag){
             return;
         }
+        ServiceHelper::rollBack();
         throw (new static($message));
     }
     public static function AssertOn($flag,$message,$modelName=null)
@@ -17,6 +19,7 @@ class BaseServiceException extends \Exception
         if($flag){
             return;
         }
+        ServiceHelper::rollBack();
         throw (new static($message))->setModel($modelName,false);
     }
     public static function AssertWithModel($flag,$model)
@@ -24,6 +27,7 @@ class BaseServiceException extends \Exception
         if($flag){
             return;
         }
+        ServiceHelper::rollBack();
         throw (new static())->attachModel($model);
     }
     public function setLabel($label)
@@ -38,9 +42,10 @@ class BaseServiceException extends \Exception
     }
     public function attachModel($model)
     {
-        $this->message = $model->getErrorMessage();
-        $this->label = $model->getErrorLabel();
-        
+        if($model){
+            $this->message = $model->getErrorMessage();
+            $this->label = $model->getErrorLabel();
+        }
         return  $this;
     }
     public function returnArray()

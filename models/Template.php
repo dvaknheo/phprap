@@ -141,5 +141,20 @@ class Template extends Model
 
         return $this;
     }
+    
+    public function createNewTemplate($project_id,$header_fields,$request_fields,$response_fields)
+    {
+        $template = new Template();
+        $template->encode_id  = $this->createEncodeId();
+        $template->project_id = $project_id;
+        $template->header_fields   = $header_fields;
+        $template->request_fields  = $request_fields;
+        $template->response_fields = $response_fields;
+        $template->status     = $template::ACTIVE_STATUS;
+        $template->creater_id = Yii::$app->user->identity->id;
+        $template->created_at = $this->getNowTime();
+
+        return $template->save();
+    }
 
 }

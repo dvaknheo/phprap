@@ -5,7 +5,9 @@ use Yii;
 use app\models\Member;
 use app\models\Config;
 use app\models\Account;
+use app\models\LoginLog;
 use yii\base\DynamicModel;
+use yii\validators\Validator;
 
 class RegisterForm extends Account
 {
@@ -117,19 +119,9 @@ class RegisterForm extends Account
 
         // 默认加入测试项目
         $member = new Member();
-        $member->encode_id    = $this->createEncodeId();
-        $member->project_id   = 1;
-        $member->user_id      = $account->id;
-        $member->join_type    = $member::PASSIVE_JOIN_TYPE;
-        $member->project_rule = 'look,export,history';
-        $member->env_rule     = 'look';
-        $member->module_rule  = 'look';
-        $member->api_rule     = 'look,export,history,debug';
-        $member->member_rule  = 'look';
-        $member->creater_id   = 1;
-        $member->created_at   = date('Y-m-d H:i:s');
+        $flag=$member->createMember($account->id);
 
-        if(!$member->save()){
+        if(!$flag){
             $this->addError($member->getErrorLabel(), $member->getErrorMessage());
             $transaction->rollBack();
             return false;
@@ -147,9 +139,8 @@ class RegisterForm extends Account
         // 事务提交
         $transaction->commit();
 
-        $config = Config::findOne(['type' => 'safe']);
-        $login_keep_time = $config->login_keep_time;
-
+        $login_keep_time = Config::GetLoginKeepTime();
+        
         return Yii::$app->user->login($account, 60*60*$login_keep_time);
     }
 

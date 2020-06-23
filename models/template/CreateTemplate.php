@@ -43,18 +43,18 @@ class CreateTemplate extends Template
             return false;
         }
 
-        // 开启事务
-        $transaction = Yii::$app->db->beginTransaction();
+
 
         // 保存接口
-        $template = new Template();
 
         if(array_sum([strlen($this->header_fields), strlen($this->request_fields), strlen($this->response_fields)]) == 0){
             $this->addError($template->getErrorLabel(), '至少填写一个字段');
             $transaction->rollBack();
             return false;
         }
-
+        // 开启事务
+        $transaction = Yii::$app->db->beginTransaction();        
+        $template = new Template();
         $template->encode_id  = $this->createEncodeId();
         $template->project_id = $this->project_id;
         $template->header_fields   = $this->header_fields;

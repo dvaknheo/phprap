@@ -65,7 +65,6 @@ $config = [
                 '/member/<id:\d+>' => 'home/member/show',
                 '/api/<id:\d+>' => 'home/api/show',
                 '/admin/home' => '/admin/home/index',
-                '/admin/test' => '/admin/home/test',
                 "<controller:\w+>/<action:\w+>"=>"home/<controller>/<action>",
             ],
         ],

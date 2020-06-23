@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\Apply;
 use app\models\Config;
 use app\services\SessionService;
+use app\services\InstallService;
 
 class PublicController extends Controller
 {
@@ -24,7 +25,7 @@ class PublicController extends Controller
 
     public function beforeAction($action)
     {
-        if(!$this->isInstalled()){
+        if(!InstallService::G()->isInstalled()){
             return $this->redirect(['home/install/step1'])->send();
         }
 
@@ -95,14 +96,4 @@ class PublicController extends Controller
 
         return $this->display('/home/public/message', ['flag' => 'error', 'message' => $message, 'time' => $jumpSeconds, 'url' => $jumpUrl]);
     }
-
-    /**
-     * 判断是否已经安装过
-     * @return bool
-     */
-    public function isInstalled()
-    {
-        return file_exists(Yii::getAlias("@runtime") . '/install/install.lock');
-    }
-
 }

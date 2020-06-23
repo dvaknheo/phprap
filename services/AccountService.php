@@ -16,10 +16,6 @@ class AccountService extends BaseService
         
         $flag = (new RegisterForm)->register($post);
         BaseServiceException::AssertWithModel($flag,$model);
-        
-        //$config = Config::findOne(['type' => 'safe']);
-        //$login_keep_time = $config->login_keep_time;
-        //return Yii::$app->user->login($account, 60*60*$login_keep_time);
     }
     public function getRegistInfo()
     {

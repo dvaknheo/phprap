@@ -28,18 +28,7 @@ class CommonLib extends BaseService
         return Yii::$app->formatter->asRelativeTime($time);
     }
 
-    /**
-     * 获取程序安装时间
-     * @return mixed
-     */
-    public function getInstallTime()
-    {
-        $file = Yii::getAlias("@runtime") .'/install/install.lock';
-        if(file_exists($file)){
-            $install = file_get_contents($file);
-            return json_decode($install)->installed_at;
-        }
-    }
+
 
     /**
      * 获取客户端IP
