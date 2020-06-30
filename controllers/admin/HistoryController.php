@@ -12,8 +12,8 @@ class HistoryController extends PublicController
      */
     public function actionLogin()
     {
-        $model = AdminService::G()->getDataForLoginHistory(ControllerHelper::REQUEST());
+        $data = AdminService::G()->getDataForLoginHistory(ControllerHelper::REQUEST());
 
-        return $this->display('login', ['model' => $model]);
+        return $this->display('login', $data);
     }
 }

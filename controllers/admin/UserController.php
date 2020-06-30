@@ -13,9 +13,9 @@ class UserController extends PublicController
     public function actionIndex()
     {
         $params = ControllerHelper::REQUEST();
-        $model = AdminService::G()->searchUser($params);
+        $data = AdminService::G()->searchUser($params);
 
-        return $this->display('index', ['user' => $model]);
+        return $this->display('index', $data);
     }
 
     /**
@@ -24,13 +24,13 @@ class UserController extends PublicController
      */
     public function actionProfile($id)
     {
+        if (ControllerHelper::NotAjax()) {
+            $model = AdminService::G()->getUserProfile($id);
+            return $this->display('profile', ['user' => $model]);
+        }
         ControllerHelper::WrapExceptionOnce(AdminService::G());
         $ret=AdminService::G()->setUserProfile($id,ControllerHelper::Post());
-        if($ret){
-            return $ret;
-        }
-        $model = AdminService::G()->getUserProfile($id);
-        return $this->display('profile', ['user' => $model]);
+        return ControllerHelper::returnData($ret);
     }
 
     /**
@@ -39,12 +39,12 @@ class UserController extends PublicController
      */
     public function actionPassword($id)
     {
+        if (ControllerHelper::NotAjax()) {
+            $model = AdminService::G()->getUserPassword($id);
+            return $this->display('password', ['user' => $model]);
+        }
         ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
         $ret = AdminService::G()->setUserPassword($id,ControllerHelper::Post());
-        if($ret){
-            return $ret;
-        }
-        $model = AdminService::G()->getUserPassword($id);
-        return $this->display('password', ['user' => $model]);
+        return ControllerHelper::returnData($ret);
     }
 }

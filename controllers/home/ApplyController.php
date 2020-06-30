@@ -14,9 +14,9 @@ class ApplyController extends PublicController
     public function actionIndex()
     {
         $params = ControllerHelper::REQUEST();
-        $model = ApplyService::G()->search($params);
+        $data = ApplyService::G()->search($params);
 
-        return $this->display('index', ['apply' => $model]);
+        return $this->display('index', $data);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers\admin;
 
 use app\helpers\ControllerHelper;
@@ -6,6 +7,7 @@ use app\services\AdminService;
 
 class SettingController extends PublicController
 {
+
     /**
      * 基础设置
      *
@@ -13,13 +15,13 @@ class SettingController extends PublicController
      */
     public function actionApp()
     {
-        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
-        $ret = AdminService::G()->setSettingApp(ControllerHelper::POST());
-        if($ret){
-            return $ret;
+        if (ControllerHelper::NotAjax()) {
+            $config = AdminService::G()->getSettingApp();
+            return $this->display('app', ['config' => $config]);
         }
-    	$config = AdminService::G()->getSettingApp();
-        return $this->display('app', ['config' => $config]);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(), '保存成功');
+        $ret = AdminService::G()->setSettingApp(ControllerHelper::POST());
+        ControllerHelper::returnData($ret);
     }
 
     /**
@@ -28,13 +30,13 @@ class SettingController extends PublicController
      */
     public function actionEmail()
     {
-        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
-        $ret = AdminService::G()->setSettingEmail(ControllerHelper::POST());
-        if($ret){
-            return $ret;
+        if (ControllerHelper::NotAjax()) {
+            $config = AdminService::G()->getSettingEmail();
+            return $this->display('email', ['config' => $config]);
         }
-        $config = AdminService::G()->getSettingEmail();
-        return $this->display('email', ['config' => $config]);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(), '保存成功');
+        $ret = AdminService::G()->setSettingEmail(ControllerHelper::POST());
+        ControllerHelper::returnData($ret);
     }
 
     /**
@@ -43,12 +45,13 @@ class SettingController extends PublicController
      */
     public function actionSafe()
     {
-        ControllerHelper::WrapExceptionOnce(AdminService::G(),'保存成功');
-        $ret = AdminService::G()->setSettingSafe($post);
-        if($ret){
-            return $ret;
+        if (ControllerHelper::NotAjax()) {
+            $config = AdminService::G()->getSettingSafe();
+            return $this->display('safe', ['config' => $config]);
         }
-        $config = AdminService::G()->getSettingSafe();
-        return $this->display('safe', ['config' => $config]);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(), '保存成功');
+        $ret = AdminService::G()->setSettingSafe(ControllerHelper::Post());
+        ControllerHelper::returnData($ret);
     }
+
 }

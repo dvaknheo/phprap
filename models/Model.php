@@ -115,20 +115,6 @@ class Model extends \yii\db\ActiveRecord
         $time = $time ? strtotime($time) : time();
         return Yii::$app->formatter->asRelativeTime($time);
     }
-
-    /**
-     * 获取程序安装时间
-     * @return mixed
-     */
-    public function getInstallTime()
-    {
-        $file = Yii::getAlias("@runtime") .'/install/install.lock';
-        if(file_exists($file)){
-            $install = file_get_contents($file);
-            return json_decode($install)->installed_at;
-        }
-    }
-
     /**
      * 获取客户端IP
      * @return mixed|string|null
@@ -155,33 +141,4 @@ class Model extends \yii\db\ActiveRecord
 
         return $country . ' ' . $province . ' ' . $city;
     }
-
-    /**
-     * 获取访问者的操作系统
-     * @return string
-     */
-    public function getOs()
-    {
-        $agent = new Agent();
-
-        $platform = $agent->platform();
-        $version  = $agent->version($platform);
-
-        return $platform . '(' . $version . ')';
-    }
-
-    /**
-     * 获取访问者浏览器
-     * @return string
-     */
-    public function getBrowser()
-    {
-        $agent = new Agent();
-
-        $browser = $agent->browser();
-        $version = $agent->version($browser);
-
-        return $browser . '(' . $version . ')';
-    }
-
 }

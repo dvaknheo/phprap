@@ -16,7 +16,12 @@ class ApplyService extends BaseService
         $params['check_status'] = Apply::CHECK_STATUS;
         $params['order_by']     = 'id desc';
 
-        return Apply::findModel()->search($params);
+        $model = Apply::findModel()->search($params);
+        $ret = [
+            'apply' => $model,
+            'params' => $model->params,
+        ];
+        return $ret;
     }
     public function getDataForCreate($project_id)
     {

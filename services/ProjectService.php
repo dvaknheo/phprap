@@ -23,7 +23,12 @@ class ProjectService extends BaseService
     {
         $params['status'] = Project::ACTIVE_STATUS;
         $params['type']   = Project::PUBLIC_TYPE;
-        return Project::findModel()->search($params);
+        $model = Project::findModel()->search($params);
+        $ret = [
+            'project' => $model,
+            'params' => $model->params,
+        ];
+        return $ret;
     }
     public function getDataForCreate()
     {

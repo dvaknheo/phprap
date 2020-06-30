@@ -1,7 +1,6 @@
 <?php
 namespace app\services;
 
-use Yii;
 use app\models\Project;
 use app\models\module\CreateModule;
 use app\models\module\UpdateModule;

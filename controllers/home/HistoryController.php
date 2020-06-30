@@ -17,9 +17,9 @@ class HistoryController extends PublicController
         $params = ControllerHelper::REQUEST();
         $user_id = SessionService::G()->getCurrentUid();
 
-        $model = HistoryService::G()->searchLoginLog($user_id,$params);
+        $data = HistoryService::G()->searchLoginLog($user_id,$params);
 
-        return $this->display('login', ['model' => $model]);
+        return $this->display('login', $data);
     }
 
     /**
@@ -31,9 +31,9 @@ class HistoryController extends PublicController
         $params = ControllerHelper::REQUEST();
         $user_id = SessionService::G()->getCurrentUid();
 
-        $model = HistoryService::G()->searchAppley($user_id,$params);
+        $data = HistoryService::G()->searchAppley($user_id,$params);
 
-        return $this->display('apply', ['model' => $model]);
+        return $this->display('apply', $data);
     }
 
 }

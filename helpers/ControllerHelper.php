@@ -14,6 +14,11 @@ class ControllerHelper
     {
         return Yii::$app->request->queryParams;
     }
+    public static function Post($key=null)
+    {
+        return Yii::$app->request->post($key);
+    }
+    
     public static function IsAjax()
     {
         $request = Yii::$app->request;
@@ -22,6 +27,10 @@ class ControllerHelper
             return true;
         }
         return false;
+    }
+    public static function NotAjax()
+    {
+        return !static::IsAjax();
     }
     //*/
     public static function AjaxPostExtData($data)
@@ -51,14 +60,18 @@ class ControllerHelper
             return $ex->returnArray();
         }
     }
-    public static function Post($key=null)
-    {
-        return Yii::$app->request->post($key);
-    }
+
     public static function WrapExceptionOnce($object,$successMessage=null)
     {
         $class=get_class($object);
         $class::G((new Proxy())->setup($class,$object,$successMessage));
+    }
+    public static function returnData($ret)
+    {
+        if(static::$ExtJsonData){
+            $ret = array_merge($ret, static::$ExtJsonData);
+        }
+        return $ret;
     }
 }
 class Proxy
@@ -109,7 +122,6 @@ class Proxy
             $this->object=null;
             $ret = ['status' => 'success', 'message' => $successMessage];
             return $ret;
-            
         }catch(BaseServiceException $ex){
             return $ex->returnArray();
         }        

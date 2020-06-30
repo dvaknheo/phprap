@@ -4,6 +4,7 @@ namespace app\models;
 use Yii;
 use app\widgets\LinkPager;
 use yii\data\Pagination;
+use Jenssegers\Agent\Agent;
 
 /**
  * This is the model class for table "{{%login_log}}".
@@ -144,5 +145,31 @@ class LoginLog extends Model
         $this->created_at = date('Y-m-d H:i:s');
 
         return $this->save();
+    }
+    /**
+     * 获取访问者浏览器
+     * @return string
+     */
+    protected function getBrowser()
+    {
+        $agent = new Agent();
+
+        $browser = $agent->browser();
+        $version = $agent->version($browser);
+
+        return $browser . '(' . $version . ')';
+    }
+    /**
+     * 获取访问者的操作系统
+     * @return string
+     */
+    protected function getOs()
+    {
+        $agent = new Agent();
+
+        $platform = $agent->platform();
+        $version  = $agent->version($platform);
+
+        return $platform . '(' . $version . ')';
     }
 }

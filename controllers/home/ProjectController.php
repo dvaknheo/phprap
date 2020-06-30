@@ -37,8 +37,8 @@ class ProjectController extends PublicController
 
         $params = ControllerHelper::REQUEST();
 
-        $model = ProjectService::G()->search($params);
-        return $this->display('search', ['project' => $model]);
+        $data = ProjectService::G()->search($params);
+        return $this->display('search', $data);
     }
 
     /**

@@ -26,7 +26,7 @@
         <?php if($account->lastLogin->id){?>
         <div class="alert alert-warning fade in m-b-15">
             <strong>温馨提示!</strong>
-            您上次登录时间 <?=$account->lastLogin->created_at?>，登录地点<?=$account->lastLogin->location?> ，浏览器 <?=$account->lastLogin->browser?>，更多登录历史请点击<a href="<?=url('home/history/login')?>?user_id=<?=$user.id?>">这里</a>。
+            您上次登录时间 <?=$account->lastLogin->created_at?>，登录地点<?=$account->lastLogin->location?> ，浏览器 <?=$account->lastLogin->browser?>，更多登录历史请点击<a href="<?=url('home/history/login')?>?user_id=<?=$user->id?>">这里</a>。
             <span class="close" data-dismiss="alert">×</span>
         </div>
         <?php }?>
@@ -122,8 +122,8 @@
                 radius : '55%',
                 center: ['50%', '60%'],
                 data:[
-                    {value:<?=$account->getCreatedProjects(10)->count()?>, name:'公开项目'},
-                    {value:<?=$account->getCreatedProjects(30)->count()?>, name:'私有项目'},
+                    {value:<?=$account->getCreatedPublicProjectsCount()?>, name:'公开项目'},
+                    {value:<?=$account->getCreatedPrivateProjectsCount()?>, name:'私有项目'},
                 ],
                 itemStyle: {
                     emphasis: {
@@ -161,8 +161,8 @@
                 radius : '55%',
                 center: ['50%', '60%'],
                 data:[
-                    {value:<?=$account->getJoinedProjects(10)->count()?>, name:'公开项目'},
-                    {value:<?=$account->getJoinedProjects(30)->count()?>, name:'私有项目'},
+                    {value:<?=$account->getJoinedPublicProjectsCount()?>, name:'公开项目'},
+                    {value:<?=$account->getJoinedPrivateProjectsCount()?>, name:'私有项目'},
                 ],
                 itemStyle: {
                     emphasis: {

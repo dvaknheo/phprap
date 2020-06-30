@@ -10,7 +10,12 @@ class HistoryService extends BaseService
     public function searchLoginLog($user_id,$params)
     {
         $params['user_id'] = $user_id;
-        return LoginLog::findModel()->search($params);
+        $model = LoginLog::findModel()->search($params);
+        $ret = [
+            'model' => $model,
+            'params' => $model->params,
+        ];
+        return $ret;
     }
     public function searchApply($user_id,$params)
     {
@@ -19,6 +24,11 @@ class HistoryService extends BaseService
         $params['refuse_status'] = Apply::REFUSE_STATUS;
         $params['order_by'] = 'checked_at desc';
 
-        return Apply::findModel()->search($params);
+        $model = Apply::findModel()->search($params);
+        $ret = [
+            'model' => $model,
+            'params' => $model->params,
+        ];
+        return $ret;
     }
 }

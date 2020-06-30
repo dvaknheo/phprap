@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers\admin;
 
 use app\helpers\ControllerHelper;
@@ -6,15 +7,15 @@ use app\services\AdminService;
 
 class ProjectController extends PublicController
 {
+
     /**
      * 搜索项目
      * @return string
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $params = ControllerHelper::REQUEST();
-        $model = AdminService::G()->searchProject($params);
-        return $this->display('index', ['project' => $model]);
+        $data = AdminService::G()->searchProject($params);
+        return $this->display('index', $data);
     }
 
     /**
@@ -22,8 +23,7 @@ class ProjectController extends PublicController
      * @return string
      * @throws \Exception
      */
-    public function actionRecycle()
-    {
+    public function actionRecycle() {
         $params = ControllerHelper::REQUEST();
         $model = AdminService::G()->searchProjectRecycled($params);
         return $this->display('recycle', ['project' => $model]);
@@ -34,15 +34,14 @@ class ProjectController extends PublicController
      * @param $id
      * @return array|string
      */
-    public function actionDelete($id)
-    {
-        ControllerHelper::WrapExceptionOnce(AdminService::G(),'删除成功');
-        $ret = AdminService::G()->deleteProject($id, ControllerHelper::POST());
-        if($ret){
-            return $ret;
+    public function actionDelete($id) {
+        if (ControllerHelper::NotAjax()) {
+            $model = AdminService::G()->getProejctForDelete($id);
+            return $this->display('delete', ['project' => $model]);
         }
-        $model = AdminService::G()->getProejctForDelete($id);
-        return $this->display('delete', ['project' => $model]);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(), '删除成功');
+        $ret = AdminService::G()->deleteProject($id, ControllerHelper::POST());
+        ControllerHelper::returnData($ret);
     }
 
     /**
@@ -50,15 +49,14 @@ class ProjectController extends PublicController
      * @param $id
      * @return array|string
      */
-    public function actionRecover($id)
-    {
-        ControllerHelper::WrapExceptionOnce(AdminService::G(),'恢复成功');
-        $ret = AdminService::G()->recoverProject($id, ControllerHelper::POST());
-        if($ret){
-            return $ret;
+    public function actionRecover($id) {
+        if (ControllerHelper::NotAjax()) {
+            $model = AdminService::G()->getProejctForRecycle($id);
+            return $this->display('recover', ['project' => $model]);
         }
-        $model = AdminService::G()->getProejctForRecycle($id);
-        return $this->display('recover', ['project' => $model]);
+        ControllerHelper::WrapExceptionOnce(AdminService::G(), '恢复成功');
+        $ret = AdminService::G()->recoverProject($id, ControllerHelper::POST());
+        ControllerHelper::returnData($ret);
     }
 
 }
