@@ -23,14 +23,14 @@
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="title" type="text" class="form-control" placeholder="项目名称，支持模糊查询" value="<?=$project->params->title?>">
+                                    <input name="title" type="text" class="form-control" placeholder="项目名称，支持模糊查询" value="<?=$params->title?>">
                                 </div>
                             </div>
 
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="user[name]" type="text" class="form-control" placeholder="创建人昵称或邮箱，支持模糊查询" value="<?=$project->params->user->name?>">
+                                    <input name="user[name]" type="text" class="form-control" placeholder="创建人昵称或邮箱，支持模糊查询" value="<?=$params->user->name?>">
                                 </div>
                             </div>
 
@@ -41,7 +41,7 @@
                                         <option disabled="" selected="" style="display:none;">项目类型</option>
                                         <option value="">不限</option>
                                         <?php foreach($project->typeLabels as $k => $v){?>
-                                        <option value="<?=$k?>" <?php if($project->params->type == $k){?>selected<?php }?>><?=$v?></option>
+                                        <option value="<?=$k?>" <?php if($params->type == $k){?>selected<?php }?>><?=$v?></option>
                                         <?php }?>
                                     </select>
                                 </div>

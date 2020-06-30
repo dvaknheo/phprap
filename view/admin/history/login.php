@@ -21,7 +21,7 @@
 
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input name="user[name]" type="text" class="form-control" placeholder="登录昵称或邮箱，支持模糊查询" value="<?=$model->params->user->name?>">
+                                    <input name="user[name]" type="text" class="form-control" placeholder="登录昵称或邮箱，支持模糊查询" value="<?=$params->user->name?>">
                                 </div>
                             </div>
 
@@ -29,14 +29,14 @@
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="ip" type="text" class="form-control" placeholder="登录IP，支持模糊查询" value="<?=$model->params->ip?>">
+                                    <input name="ip" type="text" class="form-control" placeholder="登录IP，支持模糊查询" value="<?=$params->ip?>">
                                 </div>
                             </div>
 
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="location" type="text" class="form-control" placeholder="登录地点，支持模糊查询" value="<?=$model->params->location?>">
+                                    <input name="location" type="text" class="form-control" placeholder="登录地点，支持模糊查询" value="<?=$params->location?>">
                                 </div>
                             </div>
 
@@ -77,14 +77,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach($model->models as $model){?>
+                                <?php foreach($model->models as $v){?>
 
                                 <tr>
-                                    <td><?=$model->user_name?>(<?=$model->user_email?>)</td>
-                                    <td class="datetime"><?=$model->created_at?></td>
-                                    <td><?=$model->ip?></td>
-                                    <td><?=$model->location?></td>
-                                    <td><?=$model->os?> <?=$model->browser?></td>
+                                    <td><?=$v->user_name?>(<?=$v->user_email?>)</td>
+                                    <td class="datetime"><?=$v->created_at?></td>
+                                    <td><?=$v->ip?></td>
+                                    <td><?=$v->location?></td>
+                                    <td><?=$v->os?> <?=$v->browser?></td>
                                 </tr>
                                 <?php }?>
 

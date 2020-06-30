@@ -23,14 +23,14 @@
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="name" type="text" class="form-control" placeholder="用户昵称或邮箱，支持模糊查询" value="<?=$user->params->name?>">
+                                    <input name="name" type="text" class="form-control" placeholder="用户昵称或邮箱，支持模糊查询" value="<?=$params->name?>">
                                 </div>
                             </div>
 
                             <div class="col-sm-4">
 
                                 <div class="form-group">
-                                    <input name="ip" type="text" class="form-control" placeholder="注册IP，支持模糊查询" value="<?=$user->params->ip?>">
+                                    <input name="ip" type="text" class="form-control" placeholder="注册IP，支持模糊查询" value="<?=$params->ip?>">
                                 </div>
                             </div>
 
@@ -40,9 +40,9 @@
                                     <select class="form-control" name="status">
                                         <option disabled="" selected="" style="display:none;">用户状态</option>
                                         <option value="">不限</option>
-                                        <?php foreach($user->statusLabels as $k2 => $v2){?>
-                                        <?php if($k2 !== $user::DELETED_STATUS){?>
-                                        <option value="<?=$k2?>" <?php if($user->params->status == $k2){?>selected<?php }?>><?=$v2?></option>
+                                        <?php foreach($user->statusLabels as $k => $v){?>
+                                        <?php if($k !== $user::DELETED_STATUS){?>
+                                        <option value="<?=$k?>" <?php if($user->params->status == $k){?>selected<?php }?>><?=$v?></option>
                                         <?php }?>
                                         <?php }?>
 

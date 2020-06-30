@@ -33,10 +33,10 @@
                     <i class="fa fa-info-circle"></i>
                 </a></label>
                 <div class="form-group">
-                    <?php foreach($user->statusLabels as $k2 => $v2){?>
-                    <?php if($k2 !== $user::DELETED_STATUS){?>
+                    <?php foreach($user->statusLabels as $k => $v){?>
+                    <?php if($k !== $user::DELETED_STATUS){?>
                     <label class="radio-inline">
-                        <input type="radio" name="ProfileForm[status]" <?php if($user->status == $k2){?>checked<?php }?> value="<?=$k2?>" > <?=$v2?>
+                        <input type="radio" name="ProfileForm[status]" <?php if($user->status == $k){?>checked<?php }?> value="<?=$k?>" > <?=$v?>
                     </label>
                     <?php }?>
                     <?php }?>
