@@ -62,7 +62,7 @@ class PublicController extends Controller
             $notify  = Apply::findModel()->search(['check_status' => Apply::CHECK_STATUS, 'order_by' => 'id desc']);
             $account = Yii::$app->user->identity;
 
-            $params['notify']  = $notify;
+            $params['notify_count']  = $notify->count;
             $params['account'] = $account;
         }
 

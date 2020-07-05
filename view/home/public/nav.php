@@ -28,7 +28,7 @@
 
         <li class="dropdown js_notifyDropdown">
             <a class="dropdown-toggle" href="<?=url('home/apply/index')?>">
-                <i class="fa fa-bell fa-fw"></i>(<span id="notify-count"><?=$notify->count??0?></span>)
+                <i class="fa fa-bell fa-fw"></i>(<span id="notify-count"><?=$notify_count?></span>)
             </a>
         </li>
 
@@ -64,5 +64,5 @@
         </li>
 
     </ul>
-    <?php if(isset($sidebar)){?> <?php include_view(['name'=>$sidebar])?>"?> <?php }?>
+    <?php if(isset($sidebar)){?> <?php include_view(['name'=>$sidebar])?> <?php }?>
 </nav>

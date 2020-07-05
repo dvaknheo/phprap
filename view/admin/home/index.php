@@ -23,7 +23,9 @@
 <body>
 
 <div id="wrapper">
-
+<pre>
+<?php var_export(get_defined_vars());?>
+</pre>
     <!-- Navigation -->
     <?php include_view(['name'=>'home/public/nav','sidebar'=>'admin/public/sidebar','active'=>'home'])?>
     <div id="page-wrapper">

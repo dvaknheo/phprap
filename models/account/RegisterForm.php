@@ -100,13 +100,7 @@ class RegisterForm extends Account
         if (!$this->validate()) {
             return false;
         }
-//        $this->addError('', '完成');
-//         $model = new DynamicModel(compact('name', 'email'));
-//    $model->addRule(['name', 'email'], 'string', ['max' => 128])
-//        ->addRule('email', 'email')
-//        ->validate();
-//        return false;
-        // 开启事务
+
         $transaction = Yii::$app->db->beginTransaction();
 
         $account = new Account();

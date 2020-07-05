@@ -68,6 +68,7 @@ class User extends Model implements IdentityInterface
      */
     public static function findIdentity($id)
     {
+        //@implements IdentityInterface
         if(file_exists(Yii::getAlias("@runtime") . '/install/install.lock')){
             return static::findOne(['id' => $id, 'status' => self::ACTIVE_STATUS]);
         }
@@ -88,6 +89,7 @@ class User extends Model implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        //@implements IdentityInterface
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
@@ -125,6 +127,7 @@ class User extends Model implements IdentityInterface
      */
     public function getId()
     {
+        //@implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
@@ -133,6 +136,7 @@ class User extends Model implements IdentityInterface
      */
     public function getAuthKey()
     {
+        //@implements IdentityInterface
         return $this->auth_key;
     }
 
@@ -141,6 +145,7 @@ class User extends Model implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
+        //@implements IdentityInterface
         return $this->getAuthKey() === $authKey;
     }
 

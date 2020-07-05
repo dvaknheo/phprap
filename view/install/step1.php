@@ -242,10 +242,10 @@
                                                 <?php foreach($step1 as $k => $v){?>
                                                 <tr>
                                                     <td><?=$k?></td>
-                                                    <td><?=?$v.have_chmods?></td>
-                                                    <td><?=?$v.require_chmods?></td>
+                                                    <td><?=$v['have_chmods']?></td>
+                                                    <td><?=$v['require_chmods']?></td>
                                                     <td>
-                                                        <?php if($v.check_chmod){?>
+                                                        <?php if($v['check_chmod']){?>
                                                         <i class="fa fa-check"></i>
                                                         <?php }else{?>
                                                         <i class="fa fa-times"></i>

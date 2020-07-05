@@ -40,26 +40,20 @@ class PublicController extends Controller
     public function display($view, $params = [])
     {
         $account = Yii::$app->user->identity;
+        $data['creater_id'] = $account->id;
+        $data['check_status'] = Apply::CHECK_STATUS;
+        $data['order_by'] = 'id desc';
 
-        $params['creater_id'] = $account->id;
-        $params['check_status'] = Apply::CHECK_STATUS;
-        $params['order_by'] = 'id desc';
+        $notify = Apply::findModel()->search($data);
 
-        $notify = Apply::findModel()->search($params);
-
-        $params['notify']  = $notify;
+        $params['notify_count']  = $notify->count;
         $params['account'] = $account;
 
         $params['installed_at'] = InstallService::G()->getInstallTime();
-        ////[[[[
         $my_view = $this->fetch_view_override($view);
-        if($my_view){
-            exit($this->do_view_override($my_view, $params));
-        }
-        ////]]]]
-        exit($this->render($view . '.html', $params));
+        exit($this->do_view_override($my_view, $params));
     }
-    protected function do_view_override($view,$params)
+    protected function do_view_override($view,$__params)
     {
         if(!defined('PHPRAP_CONSTS')){
             define('PHPRAP_CONSTS',true);
@@ -70,7 +64,8 @@ class PublicController extends Controller
     
         $__file=Yii::getAlias('@app').'/view/'.$view.'.php';
         unset($view);
-        extract($params);
+        extract($__params);
+        unset($__params);
         include $__file;
     }
     protected function fetch_view_override($view)
@@ -81,36 +76,4 @@ class PublicController extends Controller
         $file=Yii::getAlias('@app').'/view/'.$my_view.'.php';
         return is_file($file)?$my_view:'';
     }
-
-    /**
-     * 成功消息提示
-     * @param string $message 成功信息
-     * @param int $jumpSeconds 延迟时间，单位秒
-     * @param string $jumpUrl 跳转链接
-     * @return string
-     */
-    public function success($message, $jumpSeconds = 1, $jumpUrl = '', $model = null)
-    {
-        //未使用。
-        
-        $jumpUrl = $jumpUrl ? Url::toRoute($jumpUrl) : \Yii::$app->request->referrer;
-
-        return $this->display('/home/public/message', ['flag' => 'success', 'message' => $message, 'time' => $jumpSeconds, 'url' => $jumpUrl, 'model' => $model]);
-    }
-
-    /**
-     * 错误消息提示
-     * @param string $message 错误信息
-     * @param int $jumpSeconds 延迟时间，单位秒
-     * @param string $jumpUrl 跳转链接
-     * @return string
-     */
-    protected function error($message, $jumpSeconds = 3, $jumpUrl = '')
-    {
-        $jumpUrl = $jumpUrl ? Url::toRoute($jumpUrl) : \Yii::$app->request->referrer;
-
-        return $this->display('/home/public/message', ['flag' => 'error', 'message' => $message, 'time' => $jumpSeconds, 'url' => $jumpUrl]);
-    }
-
-
 }

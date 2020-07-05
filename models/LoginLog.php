@@ -129,7 +129,7 @@ class LoginLog extends Model
             'hideOnSinglePage' => true,
             'maxButtonCount' => 5,
         ]);
-
+        //return [$params,$];
         return $this;
     }
     public function createLoginLog($id,$name,$email)
