@@ -50,6 +50,8 @@ class PublicController extends Controller
         $params['account'] = $account;
 
         $params['installed_at'] = InstallService::G()->getInstallTime();
+        $params['app_copyright'] =  config('app.copyright');
+        // $params['active'] = '???';
         $my_view = $this->fetch_view_override($view);
         exit($this->do_view_override($my_view, $params));
     }
