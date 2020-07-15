@@ -30,15 +30,7 @@ class CreateEnv extends Env
      */
     public function validateName($attribute)
     {
-        $query = Env::find();
-
-        $query->andFilterWhere([
-            'project_id' => $this->project_id,
-            'status' => Env::ACTIVE_STATUS,
-            'name'   => $this->name,
-        ]);
-
-        if($query->exists()){
+        if(Env::ValidateName($this->project_id,$this->name)){
             $this->addError($attribute, '抱歉，该环境已存在');
             return false;
         }
@@ -52,7 +44,7 @@ class CreateEnv extends Env
     {
         $project = Project::findModel($this->project_id);
 
-        if(!$project->hasAuth(['env' => 'create'])){
+        if(!$project->hasAuthForEnvCreate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

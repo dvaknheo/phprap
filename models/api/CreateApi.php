@@ -4,7 +4,6 @@ namespace app\models\api;
 use Yii;
 use app\models\Module;
 use app\models\Api;
-use app\models\field\CreateField;
 use app\models\ProjectLog;
 
 class CreateApi extends Api
@@ -29,9 +28,7 @@ class CreateApi extends Api
      */
     public function validateAuth($attribute)
     {
-        $module = Module::findModel(['encode_id' => $this->module_id]);
-
-        if(!$module->project->hasAuth(['api' => 'create'])){
+        if(!Module::validateAuth($this->module_id)){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

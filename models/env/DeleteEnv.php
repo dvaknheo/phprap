@@ -3,6 +3,7 @@ namespace app\models\env;
 
 use Yii;
 use app\models\Env;
+use app\models\Account;
 
 class DeleteEnv extends Env
 {
@@ -37,8 +38,7 @@ class DeleteEnv extends Env
     public function validatePassword($attribute)
     {
         $account = Yii::$app->user->identity;
-
-        if(!$account->id || !$account->validatePassword($this->password)) {
+        if(!Account::validatePasswordBySelf($account,$this->password)) {
             $this->addError($attribute, '登录密码验证失败');
             return false;
         }
@@ -50,7 +50,7 @@ class DeleteEnv extends Env
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['env' => 'delete'])){
+        if(!$this->project->hasAuthForEnvDelete()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

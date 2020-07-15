@@ -27,7 +27,7 @@ class UpdateModule extends Module
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['module' => 'update'])){
+        if(!$this->project->hasAuthModuleUpdate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

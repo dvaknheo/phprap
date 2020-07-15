@@ -193,4 +193,36 @@ class Account extends User
     {
         return $this->getJoinedProjects(30)->count();
     }
+    public static function validatePassword($email,$password)
+    {
+        $account = Account::findByEmail($email);
+
+        if (!$account->id || !$account->validatePassword($password)) {
+            return false;
+        }
+        return true;
+    }
+    public static function validatePasswordById($id,$password)
+    {
+        $account = Account::findModel($id);
+        if (!$account->id || !$account->validatePassword($password)) {
+            return false;
+        }
+        return true;
+    }
+    public static function validatePasswordBySelf($account,$password)
+    {
+        if (!$account->id || !$account->validatePassword($password)) {
+            return false;
+        }
+    }
+
+    public static function validateActive($email)
+    {
+        $account = Account::findByEmail($email);
+        if ($account->status != $account::ACTIVE_STATUS) {
+            return false;
+        }
+        return true;
+    }
 }

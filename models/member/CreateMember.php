@@ -28,7 +28,7 @@ class CreateMember extends Member
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['member' => 'create'])){
+        if(!$this->project->hasAuthMemberCreate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

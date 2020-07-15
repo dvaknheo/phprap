@@ -29,19 +29,7 @@ class UpdateEnv extends Env
      */
     public function validateName($attribute)
     {
-        $query = Env::find();
-
-        $query->andFilterWhere([
-            'project_id' => $this->project_id,
-            'status'     => Env::ACTIVE_STATUS,
-            'name'       => $this->name,
-        ]);
-
-        $query->andFilterWhere([
-            '<>','id', $this->id,
-        ]);
-
-        if($query->exists()){
+        if(!Env::ValidateNameExcept($this->project_id,$this->name,$this->id)){
             $this->addError($attribute, '抱歉，该环境已存在');
             return false;
         }
@@ -53,7 +41,7 @@ class UpdateEnv extends Env
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['env' => 'update'])){
+        if(!$this->project->hasAuthForEnvUpdate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

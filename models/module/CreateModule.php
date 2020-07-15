@@ -30,7 +30,7 @@ class CreateModule extends Module
     {
         $project = Project::findModel($this->project_id);
 
-        if(!$project->hasAuth(['module' => 'create'])){
+        if(!$project->hasAuthModuleCreate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

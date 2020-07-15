@@ -64,9 +64,7 @@ class ProfileForm extends Account
      */
     public function validatePassword($attribute)
     {
-        $account = Account::findModel($this->id);
-
-        if(!$account->id || !$account->validatePassword($this->password)) {
+        if(!Account::validatePasswordById($this->id,$this->password)) {
             $this->addError($attribute, '登录密码验证失败');
             return false;
         }

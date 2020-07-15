@@ -157,4 +157,31 @@ class Env extends Model
 
         return trim($content, ',');
     }
+    public static function ValidateName($project_id,$name)
+    {
+        $query = Env::find();
+
+        $query->andFilterWhere([
+            'project_id' => $project_id,
+            'status' => Env::ACTIVE_STATUS,
+            'name'   => $name,
+        ]);
+
+        return !$query->exists();
+    }
+    public static function ValidateNameExcept($project_id,$name,$id)
+    {
+        $query = Env::find();
+
+        $query->andFilterWhere([
+            'project_id' => $project_id,
+            'status' => Env::ACTIVE_STATUS,
+            'name'   => $name,
+        ]);
+        $query->andFilterWhere([
+            '<>','id', $id,
+        ]);
+        
+        return !$query->exists();
+    }
 }

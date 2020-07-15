@@ -40,14 +40,12 @@ class LoginForm extends Account
      */
     public function validatePassword($attribute)
     {
-        $account = Account::findByEmail($this->email);
-
-        if (!$account->id || !$account->validatePassword($this->password)) {
+        if (Account::validatePassword($this->email,$this->password)) {
             $this->addError($attribute, '登录邮箱或密码错误');
             return false;
         }
 
-        if ($account->status != $account::ACTIVE_STATUS) {
+        if (!Account::validateActive($this->email)) {
             $this->addError($attribute, '抱歉，该账号已被禁用，请联系管理员处理');
             return false;
         }

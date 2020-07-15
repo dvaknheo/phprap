@@ -7,7 +7,7 @@ use app\models\field\CreateField;
 use app\models\field\UpdateField;
 
 
-class FiledService extends BaseService
+class FieldService extends BaseService
 {
     public function create($api_id,$post)
     {

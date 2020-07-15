@@ -27,7 +27,7 @@ class CreateField extends Field
     {
         $api = Api::findOne($this->api_id);
 
-        if(!$api->project->hasAuth(['api' => 'update'])){
+        if(!$api->project->hasAuthForApiUpdate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

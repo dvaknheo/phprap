@@ -53,9 +53,7 @@ class RegisterForm extends Account
      */
     public function validateToken($attribute)
     {
-        $config = Config::findOne(['type' => 'safe']);
-
-        if (!$config->register_token || $config->register_token != $this->registerToken) {
+        if (!Config::validateToken($this->registerToken)) {
             $this->addError($attribute, '注册邀请码错误');
             return false;
         }
@@ -67,20 +65,13 @@ class RegisterForm extends Account
      */
     public function validateEmail($attribute)
     {
-        $config = Config::findOne(['type' => 'safe']);
-
-        $email_white_list = array_filter(explode("\r\n", trim($config->email_white_list)));
-        $email_black_list = array_filter(explode("\r\n", trim($config->email_black_list)));
-
-        // 获取邮箱后缀，如@phprap.com
-        $register_email_suffix = stristr($this->email, "@");
-
-        if($email_white_list && !in_array($register_email_suffix, $email_white_list)){
+        list($a,$b)=Config::validateEmail($this->email);
+        if(!$a){
             $this->addError($attribute, '该邮箱后缀不在可注册名单中');
             return false;
         }
 
-        if($email_black_list && in_array($register_email_suffix, $email_black_list)){
+        if(!$b){
             $this->addError($attribute, '该邮箱后缀不允许注册');
             return false;
         }

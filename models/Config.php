@@ -67,4 +67,36 @@ class Config extends Model
         Config::findOne(['type' => 'safe']);
         return $config->login_keep_time;
     }
+    public static function validateToken($registerToken)
+    {
+        $config = Config::findOne(['type' => 'safe']);
+
+        if (!$config->register_token || $config->register_token != $registerToken) {
+            $this->addError($attribute, '注册邀请码错误');
+            return false;
+        }
+        return true;
+    }
+    public static function validateEmail($email)
+    {
+
+        $config = Config::findOne(['type' => 'safe']);
+
+        $email_white_list = array_filter(explode("\r\n", trim($config->email_white_list)));
+        $email_black_list = array_filter(explode("\r\n", trim($config->email_black_list)));
+
+        // 获取邮箱后缀，如@phprap.com
+        $register_email_suffix = stristr($email, "@");
+
+        if($email_white_list && !in_array($register_email_suffix, $email_white_list)){
+            $this->addError($attribute, '该邮箱后缀不在可注册名单中');
+            return [false,true];
+        }
+
+        if($email_black_list && in_array($register_email_suffix, $email_black_list)){
+            $this->addError($attribute, '该邮箱后缀不允许注册');
+            return [true,false];
+        }
+        return [true,true];
+    }
 }

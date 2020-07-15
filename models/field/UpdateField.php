@@ -23,7 +23,7 @@ class UpdateField extends Field
      */
     public function validateAuth($attribute)
     {
-        if(!$this->api->project->hasAuth(['api' => 'update'])){
+        if(!$this->api->project->hasAuthApiUpdate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

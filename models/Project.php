@@ -442,4 +442,63 @@ class Project extends Model
     {
         return $this->getEnvs()->count();
     }
+    public function hasAuthForApiDelete()
+    {
+        return $this->hasAuth(['api' => 'delete']);
+    }
+    public function hasAuthForApiUpdate()
+    {
+        return $this->hasAuth(['api' => 'update']);
+    }
+    public function hasAuthForEnvCreate()
+    {
+        return $this->hasAuth(['env' => 'create']);
+    }
+    public function hasAuthForEnvDelete()
+    {
+        return $this->hasAuth(['env' => 'delete']);        
+    }
+    public function hasAuthForEnvUpdate()
+    {
+        return $this->hasAuth(['env' => 'update']);        
+    }
+    public function hasAuthMemberCreate()
+    {
+        return $this->hasAuth(['member' => 'create']);
+    }
+    public function hasAuthMemberRemove()
+    {
+        return $this->hasAuth(['member' => 'remove']);
+    }
+    public function hasAuthMemberUpdate()
+    {
+        return $this->hasAuth(['member' => 'update']);
+    }
+    
+    public function hasAuthModuleCreate()
+    {
+        return $this->hasAuth(['module' => 'create']);
+    }
+    public function hasAuthModuleUpdate()
+    {
+        return $this->hasAuth(['module' => 'update']);
+    }
+    public function hasAuthModuleDelete()
+    {
+        return $this->hasAuth(['module' => 'delete']);
+    }
+    
+    public static function ValidateJoiner($project_id)
+    {
+        $project = Project::findModel($project_id);
+
+        if($project->status != Project::ACTIVE_STATUS){
+            return [false,true];
+        }
+
+        if($project->isJoiner()){
+            return [true,false];
+        }
+        return [true,true];
+    }
 }

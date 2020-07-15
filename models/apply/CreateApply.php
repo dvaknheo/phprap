@@ -29,24 +29,19 @@ class CreateApply extends Apply
      */
     public function validateAuth($attribute)
     {
-        $project = Project::findModel($this->project_id);
-
-        if($project->status != Project::ACTIVE_STATUS){
+        list($a,$b)=Project::ValidateJoiner($this->project_id);
+        if(!$a){
             $this->addError($attribute, '该项目已禁用或删除，无法提交加入申请');
             return false;
         }
 
-        if($project->isJoiner()){
+        if(!$b){
             $this->addError($attribute, '您已是该项目成员，请不要重复申请');
             return false;
         }
 
-        $apply = Apply::find()->where([
-            'user_id'    => Yii::$app->user->identity->id,
-            'project_id' => $this->project_id,
-        ])->orderBy(['id' => SORT_DESC])->one();
-
-        if($apply->status == Apply::CHECK_STATUS){
+        $user_id = Yii::$app->user->identity->id;
+        if(Apply::ValidateApplyed($user_id,$this->project_id)){
             $this->addError($attribute, '您已提交过加入申请，请耐心等待审核结果');
             return false;
         }

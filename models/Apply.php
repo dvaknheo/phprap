@@ -178,4 +178,16 @@ class Apply extends Model
 
         return $this;
     }
+    public static function ValidateApplyed($user_id,$project_id)
+    {
+        $apply = Apply::find()->where([
+            'user_id'    => $user_id,
+            'project_id' => $project_id,
+        ])->orderBy(['id' => SORT_DESC])->one();
+
+        if($apply->status == Apply::CHECK_STATUS){
+            return false;
+        }
+        return true;
+    }
 }

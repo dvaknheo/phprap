@@ -3,6 +3,7 @@ namespace app\models\member;
 
 use Yii;
 use app\models\Member;
+use app\models\Account;
 
 class RemoveMember extends Member
 {
@@ -38,7 +39,7 @@ class RemoveMember extends Member
     {
         $account = Yii::$app->user->identity;
 
-        if(!$account->id || !$account->validatePassword($this->password)) {
+        if(!Account::validatePasswordBySelf($account,$this->password)) {
             $this->addError($attribute, '登录密码验证失败');
             return false;
         }
@@ -50,7 +51,7 @@ class RemoveMember extends Member
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['member' => 'remove'])){
+        if(!$this->project->hasAuthMemberRemove()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

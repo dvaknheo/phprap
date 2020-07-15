@@ -177,5 +177,13 @@ class Module extends Model
 
         return $this;
     }
+    public static function validateAuth($module_id)
+    {
+        $module = Module::findModel(['encode_id' => $module_id]);
 
+        if(!$module->project->hasAuth(['api' => 'create'])){
+            return false;
+        }
+        return true;
+    }
 }

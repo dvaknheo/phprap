@@ -27,7 +27,7 @@ class UpdateApi extends Api
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['api' => 'update'])){
+        if(!$this->project->hasAuthForApiUpdate()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

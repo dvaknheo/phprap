@@ -3,6 +3,7 @@ namespace app\models\module;
 
 use Yii;
 use app\models\Module;
+use app\models\Account;
 
 class DeleteModule extends Module
 {
@@ -37,8 +38,7 @@ class DeleteModule extends Module
     public function validatePassword($attribute)
     {
         $account = Yii::$app->user->identity;
-
-        if (!$account->id || !$account->validatePassword($this->password)) {
+        if (!Account::validatePasswordBySelf($account, $this->password)) {
             $this->addError($attribute, '登录密码验证失败');
             return false;
         }
@@ -50,7 +50,7 @@ class DeleteModule extends Module
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['module' => 'delete'])){
+        if(!$this->project->hasAuthModuleDelete()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }

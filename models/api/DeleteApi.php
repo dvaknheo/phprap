@@ -3,6 +3,7 @@ namespace app\models\api;
 
 use Yii;
 use app\models\Api;
+use app\models\Account;
 
 class DeleteApi extends Api
 {
@@ -33,8 +34,7 @@ class DeleteApi extends Api
     public function validatePassword($attribute)
     {
         $account = Yii::$app->user->identity;
-
-        if (!$account->id || !$account->validatePassword($this->password)) {
+        if (!Account::validatePasswordBySelf($account,$this->password)) {
             $this->addError($attribute, '登录密码验证失败');
             return false;
         }
@@ -46,7 +46,7 @@ class DeleteApi extends Api
      */
     public function validateAuth($attribute)
     {
-        if(!$this->project->hasAuth(['api' => 'delete'])){
+        if(!$this->project->hasAuthForApiDelete()){
             $this->addError($attribute, '抱歉，您没有操作权限');
             return false;
         }
